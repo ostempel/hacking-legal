@@ -1,16 +1,28 @@
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.responses import JSONResponse
 from llama_index.core import VectorStoreIndex, SimpleDirectoryReader, Settings
 from llama_index.core.agent.workflow import AgentWorkflow
 from llama_index.llms.ollama import Ollama
 from llama_index.embeddings.huggingface import HuggingFaceEmbedding
 from pydantic import BaseModel
-import asyncio
 import os
 import shutil
 import uuid
-
+import json
+import requests
+from ollama import generate, GenerateResponse
+from typing import Optional, List
 app = FastAPI()
+
+class Case(BaseModel):
+  appellant: str
+  appellee: str
+  relevant_to_bmw: bool
+  subject_of_case: bool
+  high_risk: bool
+  complaint_and_legal_action: str
+  department: Optional[List[str]]
+  summary: str
 
 # Settings control global defaults
 Settings.embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-base-en-v1.5")
@@ -25,10 +37,6 @@ documents = allReader.load_data()
 index = VectorStoreIndex.from_documents(documents)
 query_engine = index.as_query_engine()
 
-async def search_documents(query: str) -> str:
-    response = await query_engine.aquery(query)
-    return str(response)
-
 def reload_index():
     global index, query_engine
     documents = SimpleDirectoryReader("data", recursive=True).load_data()
@@ -41,10 +49,13 @@ def set_index(path: str):
     index = VectorStoreIndex.from_documents(documents)
     query_engine = index.as_query_engine()
 
+def parse_text_to_json(text: str) -> str:
+    return json.loads(text)
+
 agent = AgentWorkflow.from_tools_or_functions(
-    [search_documents],
+    [parse_text_to_json],
     llm=Settings.llm,
-    system_prompt="""You are a helpful assistant that helps searching legal documents and extracts information.""",
+    system_prompt="""You are a helpful assistant and parse text to json.""",
 )
 
 class QueryRequest(BaseModel):
@@ -92,26 +103,31 @@ async def upload_pdf(file: UploadFile = File(...)):
 
 @app.post("/query")
 async def query(request: QueryRequest):
+    prompt = "1. Who is the appellant and appellee by name?.\n2. Has this law suite any relevance to BMW?\n3. Is BMW the subject of this case?\n4. Is this a high risk law suite for the company BMW?\n5. What is the complaint and legal action?\n6. To which department of BMW is this case relevant [Product and Litigation, Corporate Finance, Financial Services and M&A, Intellectual Property, Data and Digital Law, Legal Operations, Antitrust Law Coordination, BMW Group Compliance, Labor and Social Law, Tax Law]?\n7. Summarize the case in a few sentences containing all the relevant information?"
     print(request.uuid)
     reader = SimpleDirectoryReader(os.path.join("data", request.uuid), recursive=True)
     docs = reader.load_data()
     i = VectorStoreIndex.from_documents(docs)
     qe = i.as_query_engine()
 
-    async def sdocs(query: str) -> str:
-        response = await qe.aquery(query)
-        return str(response)
-    
-    a = AgentWorkflow.from_tools_or_functions(
-        [sdocs],
-        llm=Settings.llm,
-        system_prompt="""You are a helpful assistant that helps searching legal documents and extracts information.""",
-    )
     print("Querying...")
     try:
-        res = await qe.aquery(f"Reference the case {request.query} and answer the questions shortly:\n1. Who is the appellant and appellee? Give me their names and the names and their lawyers.\n2. Has this law suite any relevance to BMW?\n3. Is this a high risk for the company BMW?\n4. What is the complaint and legal action?\n5. Summarize the case in a few sentences containing all the relevant information?")
+        res = await qe.aquery(f"Reference the case {request.query} and answer the questions shortly:\n" + prompt)
+        print(res)
+        print(res.response)
+
+        response: GenerateResponse = generate(model='llama3.2', stream=False,
+            prompt=f"{res.response}\n\n" + prompt,
+            format=Case.model_json_schema())
+
+        print(response.model_dump(mode="json"))
         
-        return {"response": res}
+        # Parse the string response into JSON object
+        try:
+            json_response = json.loads(response.response)
+            return json_response
+        except json.JSONDecodeError as e:
+            raise HTTPException(status_code=500, detail="Failed to parse response as JSON")
     except Exception as e:
         return JSONResponse(
             status_code=500,
@@ -120,4 +136,4 @@ async def query(request: QueryRequest):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
