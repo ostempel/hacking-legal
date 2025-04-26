@@ -1,0 +1,38 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/@prisma-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model LegalCase {
+  id       String @id @default(uuid())
+  name     String
+  uploadId String
+
+  CaseInfo CaseInfo?
+}
+
+model CaseInfo {
+  id                         String   @id @default(uuid())
+  appellant                  String
+  apellee                    String
+  relevant_to_bmw            Boolean
+  subject_of_case            Boolean
+  high_risk                  Boolean
+  complaint_and_legal_action String
+  department                 String[]
+  summary                    String
+
+  LegalCase   LegalCase @relation(fields: [legalCaseId], references: [id])
+  legalCaseId String    @unique
+}
