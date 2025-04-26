@@ -92,19 +92,26 @@ async def upload_pdf(file: UploadFile = File(...)):
 
 @app.post("/query")
 async def query(request: QueryRequest):
-    print(os.path.join("data", request.uuid))
-    print(request.query)
-    reload_index()
+    print(request.uuid)
+    reader = SimpleDirectoryReader(os.path.join("data", request.uuid), recursive=True)
+    docs = reader.load_data()
+    i = VectorStoreIndex.from_documents(docs)
+    qe = i.as_query_engine()
+
+    async def sdocs(query: str) -> str:
+        response = await qe.aquery(query)
+        return str(response)
     
-    agent = AgentWorkflow.from_tools_or_functions(
-        [search_documents],
+    a = AgentWorkflow.from_tools_or_functions(
+        [sdocs],
         llm=Settings.llm,
         system_prompt="""You are a helpful assistant that helps searching legal documents and extracts information.""",
     )
     print("Querying...")
     try:
-        response = await agent.run(request.query)
-        return {"response": response}
+        res = await qe.aquery(f"Reference the case {request.query} and answer the questions shortly:\n1. Who is the appellant and appellee? Give me their names and the names and their lawyers.\n2. Has this law suite any relevance to BMW?\n3. Is this a high risk for the company BMW?\n4. What is the complaint and legal action?\n5. Summarize the case in a few sentences containing all the relevant information?")
+        
+        return {"response": res}
     except Exception as e:
         return JSONResponse(
             status_code=500,
