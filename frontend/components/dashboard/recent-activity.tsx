@@ -9,20 +9,20 @@ const activities = [
       avatar: "/placeholder.svg?height=32&width=32",
       initials: "DS",
     },
-    action: "hat einen Kommentar hinzugefügt",
-    target: "Fall #C-2023-002",
-    time: "Vor 10 Minuten",
+    action: "added a comment",
+    target: "Case #C-2023-002",
+    time: "10 minutes ago",
   },
   {
     id: 2,
     user: {
-      name: "Anna Müller",
+      name: "Anna Miller",
       avatar: "/placeholder.svg?height=32&width=32",
       initials: "AM",
     },
-    action: "hat 5 Dokumente hochgeladen",
-    target: "Fall #C-2024-001",
-    time: "Vor 45 Minuten",
+    action: "uploaded 5 documents",
+    target: "Case #C-2024-001",
+    time: "45 minutes ago",
   },
   {
     id: 3,
@@ -31,20 +31,20 @@ const activities = [
       avatar: "/placeholder.svg?height=32&width=32",
       initials: "TW",
     },
-    action: "hat die Analyse abgeschlossen",
-    target: "Fall #C-2023-003",
-    time: "Vor 2 Stunden",
+    action: "completed the analysis",
+    target: "Case #C-2023-003",
+    time: "2 hours ago",
   },
   {
     id: 4,
     user: {
-      name: "Julia Becker",
+      name: "Julia Baker",
       avatar: "/placeholder.svg?height=32&width=32",
       initials: "JB",
     },
-    action: "hat einen neuen Fall erstellt",
-    target: "Fall #C-2024-002",
-    time: "Vor 3 Stunden",
+    action: "created a new case",
+    target: "Case #C-2024-002",
+    time: "3 hours ago",
   },
   {
     id: 5,
@@ -53,9 +53,9 @@ const activities = [
       avatar: "/placeholder.svg?height=32&width=32",
       initials: "SY",
     },
-    action: "hat eine Inkonsistenz erkannt",
-    target: "Fall #C-2023-002",
-    time: "Vor 5 Stunden",
+    action: "detected an inconsistency",
+    target: "Case #C-2023-002",
+    time: "5 hours ago",
   },
 ]
 
@@ -63,7 +63,7 @@ export function RecentActivity() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Letzte Aktivitäten</CardTitle>
+        <CardTitle>Recent Activity</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-6">

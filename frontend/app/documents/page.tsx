@@ -1,6 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import type React from "react"
+
+import { useState, useRef } from "react"
 import { DocumentUploader } from "@/components/documents/document-uploader"
 import { DocumentList } from "@/components/documents/document-list"
 import { DocumentFilters } from "@/components/documents/document-filters"
@@ -13,6 +15,7 @@ export default function DocumentsPage() {
   const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc")
   const [selectedCase, setSelectedCase] = useState<string | null>(null)
   const [searchQuery, setSearchQuery] = useState("")
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleSort = (field: "name" | "case" | "date") => {
     if (field === sortField) {
@@ -31,31 +34,44 @@ export default function DocumentsPage() {
     setSearchQuery(query)
   }
 
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files
+    if (files && files.length > 0) {
+      // Here you would typically handle the file upload
+      // For now, just log the file name
+      console.log(`Selected file: ${files[0].name}`)
+
+      // Reset the input so the same file can be selected again
+      e.target.value = ""
+    }
+  }
+
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Dokumente</h1>
-          <p className="text-muted-foreground">Verwalten und analysieren Sie alle Dokumente</p>
+          <h1 className="text-3xl font-bold">Documents</h1>
+          <p className="text-muted-foreground">Manage and analyze all documents</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
             <Upload className="mr-2 h-4 w-4" />
-            Importieren
+            Import
           </Button>
-          <Button>
+          <Button onClick={() => fileInputRef.current?.click()}>
             <Plus className="mr-2 h-4 w-4" />
-            Neues Dokument
+            New Document
           </Button>
+          <input type="file" ref={fileInputRef} accept=".pdf" className="hidden" onChange={handleFileUpload} />
         </div>
       </div>
 
       <Tabs defaultValue="all" className="w-full">
         <TabsList>
-          <TabsTrigger value="all">Alle Dokumente</TabsTrigger>
-          <TabsTrigger value="recent">Kürzlich hinzugefügt</TabsTrigger>
-          <TabsTrigger value="unassigned">Nicht zugeordnet</TabsTrigger>
-          <TabsTrigger value="analyzed">Analysiert</TabsTrigger>
+          <TabsTrigger value="all">All Documents</TabsTrigger>
+          <TabsTrigger value="recent">Recently Added</TabsTrigger>
+          <TabsTrigger value="unassigned">Unassigned</TabsTrigger>
+          <TabsTrigger value="analyzed">Analyzed</TabsTrigger>
         </TabsList>
 
         <TabsContent value="all" className="space-y-6">

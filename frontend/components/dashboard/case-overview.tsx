@@ -14,41 +14,49 @@ type SortDirection = "asc" | "desc"
 
 const cases = [
   {
+    id: "C-2024-006",
+    name: "Copyright Review",
+    status: "Not Started Yet",
+    date: "2024-03-15",
+    jurisdiction: "Germany",
+    riskLevel: "low",
+  },
+  {
     id: "C-2023-001",
-    name: "Produkthaftung XYZ GmbH",
-    status: "In Bearbeitung",
+    name: "Product Liability XYZ Corp",
+    status: "In Progress",
     date: "2023-12-15",
-    jurisdiction: "Deutschland",
+    jurisdiction: "Germany",
     riskLevel: "medium",
   },
   {
     id: "C-2023-002",
-    name: "Patentstreit TechCorp",
-    status: "Kritisch",
+    name: "Patent Dispute TechCorp",
+    status: "Critical",
     date: "2023-11-28",
     jurisdiction: "EU",
     riskLevel: "high",
   },
   {
     id: "C-2023-003",
-    name: "Arbeitsrecht Compliance",
-    status: "Abgeschlossen",
+    name: "Labor Law Compliance",
+    status: "Completed",
     date: "2023-10-05",
-    jurisdiction: "Deutschland",
+    jurisdiction: "Germany",
     riskLevel: "low",
   },
   {
     id: "C-2024-001",
-    name: "Datenschutzprüfung",
-    status: "In Bearbeitung",
+    name: "Data Protection Audit",
+    status: "In Progress",
     date: "2024-01-10",
-    jurisdiction: "Deutschland",
+    jurisdiction: "Germany",
     riskLevel: "medium",
   },
   {
     id: "C-2024-002",
-    name: "Vertragsanalyse Lieferanten",
-    status: "In Bearbeitung",
+    name: "Supplier Contract Analysis",
+    status: "In Progress",
     date: "2024-02-01",
     jurisdiction: "International",
     riskLevel: "medium",
@@ -81,11 +89,17 @@ export function CaseOverview() {
   })
 
   const getStatusBadge = (status: string, riskLevel: string) => {
-    if (status === "Kritisch") {
+    if (status === "Critical") {
       return <Badge variant="destructive">{status}</Badge>
-    } else if (status === "Abgeschlossen") {
+    } else if (status === "Completed") {
       return (
         <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+          {status}
+        </Badge>
+      )
+    } else if (status === "Not Started Yet") {
+      return (
+        <Badge variant="outline" className="bg-gray-50 text-gray-700 border-gray-200">
           {status}
         </Badge>
       )
@@ -104,7 +118,7 @@ export function CaseOverview() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Aktuelle Fälle</CardTitle>
+        <CardTitle>Current Cases</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
@@ -116,7 +130,7 @@ export function CaseOverview() {
                   onClick={() => handleSort("id")}
                   className="flex items-center gap-1 p-0 h-auto font-medium"
                 >
-                  Fall-ID
+                  Case ID
                   {sortField === "id" && <ArrowUpDown className="h-3 w-3" />}
                 </Button>
               </TableHead>
@@ -126,7 +140,7 @@ export function CaseOverview() {
                   onClick={() => handleSort("name")}
                   className="flex items-center gap-1 p-0 h-auto font-medium text-left"
                 >
-                  Bezeichnung
+                  Name
                   {sortField === "name" && <ArrowUpDown className="h-3 w-3" />}
                 </Button>
               </TableHead>
@@ -146,7 +160,7 @@ export function CaseOverview() {
                   onClick={() => handleSort("date")}
                   className="flex items-center gap-1 p-0 h-auto font-medium"
                 >
-                  Datum
+                  Date
                   {sortField === "date" && <ArrowUpDown className="h-3 w-3" />}
                 </Button>
               </TableHead>
@@ -156,7 +170,7 @@ export function CaseOverview() {
                   onClick={() => handleSort("jurisdiction")}
                   className="flex items-center gap-1 p-0 h-auto font-medium"
                 >
-                  Jurisdiktion
+                  Jurisdiction
                   {sortField === "jurisdiction" && <ArrowUpDown className="h-3 w-3" />}
                 </Button>
               </TableHead>
@@ -177,20 +191,20 @@ export function CaseOverview() {
                   </Link>
                 </TableCell>
                 <TableCell>{getStatusBadge(caseItem.status, caseItem.riskLevel)}</TableCell>
-                <TableCell>{new Date(caseItem.date).toLocaleDateString("de-DE")}</TableCell>
+                <TableCell>{new Date(caseItem.date).toLocaleDateString("en-US")}</TableCell>
                 <TableCell>{caseItem.jurisdiction}</TableCell>
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon">
                         <MoreHorizontal className="h-4 w-4" />
-                        <span className="sr-only">Menü öffnen</span>
+                        <span className="sr-only">Open menu</span>
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem>Details anzeigen</DropdownMenuItem>
-                      <DropdownMenuItem>Dokumente</DropdownMenuItem>
-                      <DropdownMenuItem>Analyse</DropdownMenuItem>
+                      <DropdownMenuItem>View details</DropdownMenuItem>
+                      <DropdownMenuItem>Documents</DropdownMenuItem>
+                      <DropdownMenuItem>Analysis</DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </TableCell>

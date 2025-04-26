@@ -9,11 +9,11 @@ import { Search, ArrowUpDown } from "lucide-react"
 
 // Mock cases data
 const cases = [
-  { id: "C-2023-001", name: "Produkthaftung XYZ GmbH" },
-  { id: "C-2023-002", name: "Patentstreit TechCorp" },
-  { id: "C-2023-003", name: "Arbeitsrecht Compliance" },
-  { id: "C-2024-001", name: "Datenschutzprüfung" },
-  { id: "C-2024-002", name: "Vertragsanalyse Lieferanten" },
+  { id: "C-2023-001", name: "Product Liability XYZ Corp" },
+  { id: "C-2023-002", name: "Patent Dispute TechCorp" },
+  { id: "C-2023-003", name: "Labor Law Compliance" },
+  { id: "C-2024-001", name: "Data Protection Audit" },
+  { id: "C-2024-002", name: "Supplier Contract Analysis" },
 ]
 
 interface DocumentFiltersProps {
@@ -62,21 +62,16 @@ export function DocumentFilters({
     <div className="flex flex-col gap-4 md:flex-row">
       <div className="relative w-full md:w-1/3">
         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-        <Input
-          type="search"
-          placeholder="Dokumente durchsuchen..."
-          className="w-full pl-8"
-          onChange={handleSearchChange}
-        />
+        <Input type="search" placeholder="Search documents..." className="w-full pl-8" onChange={handleSearchChange} />
       </div>
 
       {!disableCaseFilter && (
         <Select value={selectedCase || ""} onValueChange={handleCaseChange}>
           <SelectTrigger className="w-full md:w-[200px]">
-            <SelectValue placeholder="Fall auswählen" />
+            <SelectValue placeholder="Select case" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="all">Alle Fälle</SelectItem>
+            <SelectItem value="all">All cases</SelectItem>
             {cases.map((caseItem) => (
               <SelectItem key={caseItem.id} value={caseItem.id}>
                 {caseItem.id}: {caseItem.name}
@@ -90,16 +85,13 @@ export function DocumentFilters({
         <Button variant="outline" size="sm" onClick={() => onSort("name")} className="flex items-center gap-1">
           Name {getSortIcon("name")}
         </Button>
-        <Button variant="outline" size="sm" onClick={() => onSort("case")} className="flex items-center gap-1">
-          Fall {getSortIcon("case")}
-        </Button>
         <Button variant="outline" size="sm" onClick={() => onSort("date")} className="flex items-center gap-1">
-          Datum {getSortIcon("date")}
+          Date {getSortIcon("date")}
         </Button>
       </div>
 
       <Button variant="secondary" size="sm" className="md:ml-auto">
-        Filter zurücksetzen
+        Reset Filters
       </Button>
     </div>
   )

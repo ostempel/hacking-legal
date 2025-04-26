@@ -15,32 +15,31 @@ import { ArrowLeft, Download, Share2, FileText, FileIcon as FilePdf, FileImage }
 const mockDocuments = [
   {
     id: "doc-001",
-    name: "Patentanmeldung_TechCorp.pdf",
+    name: "Patent_Application_TechCorp.pdf",
     type: "pdf",
     size: "2.4 MB",
     uploadedBy: "Dr. Schmidt",
     uploadedAt: "2023-11-28",
     caseId: "C-2023-002",
-    caseName: "Patentstreit TechCorp",
+    caseName: "Patent Dispute TechCorp",
     analyzed: true,
     content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
     analysis: {
-      summary:
-        "Dieses Dokument enthält eine Patentanmeldung für eine neue Technologie im Bereich der Datenverarbeitung.",
+      summary: "This document contains a patent application for a new technology in the field of data processing.",
       keyPoints: [
-        "Anmeldedatum: 15.10.2023",
-        "Anmelder: TechCorp GmbH",
-        "Patentklasse: G06F 16/00",
-        "Erfinder: Dr. John Smith, Jane Doe",
+        "Application date: 15.10.2023",
+        "Applicant: TechCorp Inc.",
+        "Patent class: G06F 16/00",
+        "Inventors: Dr. John Smith, Jane Doe",
       ],
       relevantSections: [
-        { title: "Anspruch 1", content: "Ein Verfahren zur Datenverarbeitung, umfassend..." },
-        { title: "Technischer Hintergrund", content: "Die vorliegende Erfindung betrifft..." },
+        { title: "Claim 1", content: "A method for data processing, comprising..." },
+        { title: "Technical Background", content: "The present invention relates to..." },
       ],
       recommendations: [
-        "Als Hauptbeweisstück für den Patentstreit verwenden",
-        "Technische Experten zur Bewertung der Ansprüche hinzuziehen",
-        "Vergleich mit bestehenden Patenten durchführen",
+        "Use as main evidence for the patent dispute",
+        "Add technical experts to evaluate the claims",
+        "Compare with existing patents",
       ],
     },
   },
@@ -56,10 +55,10 @@ export default function DocumentDetailPage({ params }: { params: { id: string } 
   if (!document) {
     return (
       <div className="container mx-auto p-6">
-        <h1 className="text-3xl font-bold">Dokument nicht gefunden</h1>
-        <p className="text-muted-foreground">Das angeforderte Dokument existiert nicht.</p>
+        <h1 className="text-3xl font-bold">Document not found</h1>
+        <p className="text-muted-foreground">The requested document does not exist.</p>
         <Button asChild className="mt-4">
-          <Link href="/documents">Zurück zur Dokumentenliste</Link>
+          <Link href="/documents">Back to document list</Link>
         </Button>
       </div>
     )
@@ -105,9 +104,9 @@ export default function DocumentDetailPage({ params }: { params: { id: string } 
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <span>{document.size}</span>
                 <span>•</span>
-                <span>Hochgeladen am {new Date(document.uploadedAt).toLocaleDateString("de-DE")}</span>
+                <span>Uploaded on {new Date(document.uploadedAt).toLocaleDateString("en-US")}</span>
                 <span>•</span>
-                <span>Von {document.uploadedBy}</span>
+                <span>By {document.uploadedBy}</span>
               </div>
             </div>
           </div>
@@ -115,15 +114,15 @@ export default function DocumentDetailPage({ params }: { params: { id: string } 
         <div className="flex gap-2">
           <Button variant="outline">
             <Download className="mr-2 h-4 w-4" />
-            Herunterladen
+            Download
           </Button>
           <Button variant="outline">
             <Share2 className="mr-2 h-4 w-4" />
-            Teilen
+            Share
           </Button>
           {!document.analyzed && (
             <Button onClick={handleAnalyze} disabled={isAnalyzing}>
-              {isAnalyzing ? "Wird analysiert..." : "Analysieren"}
+              {isAnalyzing ? "Analyzing..." : "Analyze"}
             </Button>
           )}
         </div>
@@ -132,7 +131,7 @@ export default function DocumentDetailPage({ params }: { params: { id: string } 
       <div className="flex items-center gap-4">
         {document.caseId ? (
           <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Fall:</span>
+            <span className="text-sm text-muted-foreground">Case:</span>
             <Badge variant="outline">
               <Link href={`/cases/${document.caseId}`} className="hover:underline">
                 {document.caseName}
@@ -141,9 +140,9 @@ export default function DocumentDetailPage({ params }: { params: { id: string } 
           </div>
         ) : (
           <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Fall:</span>
+            <span className="text-sm text-muted-foreground">Case:</span>
             <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
-              Nicht zugeordnet
+              Unassigned
             </Badge>
           </div>
         )}
@@ -151,11 +150,11 @@ export default function DocumentDetailPage({ params }: { params: { id: string } 
           <span className="text-sm text-muted-foreground">Status:</span>
           {document.analyzed ? (
             <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-              Analysiert
+              Analyzed
             </Badge>
           ) : (
             <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
-              Analyse ausstehend
+              Analysis pending
             </Badge>
           )}
         </div>
@@ -163,11 +162,11 @@ export default function DocumentDetailPage({ params }: { params: { id: string } 
 
       <Tabs defaultValue="preview" className="w-full">
         <TabsList>
-          <TabsTrigger value="preview">Vorschau</TabsTrigger>
+          <TabsTrigger value="preview">Preview</TabsTrigger>
           <TabsTrigger value="analysis" disabled={!document.analyzed && !isAnalyzing}>
-            KI-Analyse
+            AI Analysis
           </TabsTrigger>
-          <TabsTrigger value="metadata">Metadaten</TabsTrigger>
+          <TabsTrigger value="metadata">Metadata</TabsTrigger>
         </TabsList>
 
         <TabsContent value="preview" className="space-y-6">
@@ -179,9 +178,9 @@ export default function DocumentDetailPage({ params }: { params: { id: string } 
             <Card>
               <CardContent className="flex flex-col items-center justify-center py-12">
                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
-                <h3 className="text-lg font-medium">Dokument wird analysiert</h3>
+                <h3 className="text-lg font-medium">Analyzing document</h3>
                 <p className="text-sm text-muted-foreground mt-2">
-                  Die KI analysiert das Dokument. Dies kann einige Momente dauern...
+                  The AI is analyzing the document. This may take a moment...
                 </p>
               </CardContent>
             </Card>

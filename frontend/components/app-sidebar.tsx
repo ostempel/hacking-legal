@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
-import { BarChart3, FileText, Folder, Home, Settings, Upload, Users, Scale } from "lucide-react"
+import { FileText, Folder, Home, Settings, Upload, Users, Scale, LogOut } from "lucide-react"
 import {
   Sidebar,
   SidebarContent,
@@ -35,7 +35,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarHeader className="flex flex-col gap-2 px-4 py-2">
         <div className="flex items-center">
-          <Link href="/dashboard" className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
             <Scale className="h-6 w-6 text-primary" />
             <span className="text-xl font-bold">Paragrafenbändiger</span>
           </Link>
@@ -72,14 +72,6 @@ export function AppSidebar() {
               </SidebarMenuButton>
             </SidebarMenuItem>
             <SidebarMenuItem>
-              <SidebarMenuButton asChild isActive={isActive("/reports")}>
-                <Link href="/reports">
-                  <BarChart3 className="h-4 w-4" />
-                  <span>Reports</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
               <SidebarMenuButton asChild isActive={isActive("/documents")}>
                 <Link href="/documents">
                   <FileText className="h-4 w-4" />
@@ -103,6 +95,14 @@ export function AppSidebar() {
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <Link href="/">
+                  <LogOut className="h-4 w-4" />
+                  <span>Logout</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
           </SidebarMenu>
         ) : (
           <SidebarMenu>
@@ -119,6 +119,14 @@ export function AppSidebar() {
                 <Link href="/settings">
                   <Settings className="h-4 w-4" />
                   <span>Settings</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+            <SidebarMenuItem>
+              <SidebarMenuButton asChild>
+                <Link href="/">
+                  <LogOut className="h-4 w-4" />
+                  <span>Logout</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

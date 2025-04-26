@@ -115,7 +115,7 @@ export function DocumentUploader() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Dokumente hochladen</CardTitle>
+        <CardTitle>Upload Documents</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="border-2 border-dashed rounded-lg p-10 text-center">
@@ -129,10 +129,10 @@ export function DocumentUploader() {
           />
           <label htmlFor="file-upload" className="flex flex-col items-center justify-center cursor-pointer">
             <Upload className="h-10 w-10 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium mb-2">Dateien hier ablegen oder klicken zum Auswählen</h3>
-            <p className="text-sm text-muted-foreground mb-4">Unterstützte Formate: PDF, DOCX, XLSX, JPG, PNG, EML</p>
+            <h3 className="text-lg font-medium mb-2">Drop files here or click to select</h3>
+            <p className="text-sm text-muted-foreground mb-4">Supported formats: PDF, DOCX, XLSX, JPG, PNG, EML</p>
             <Button variant="outline" disabled={uploading}>
-              Dateien auswählen
+              Select Files
             </Button>
           </label>
         </div>
@@ -140,14 +140,14 @@ export function DocumentUploader() {
         {files.length > 0 && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="font-medium">Ausgewählte Dateien ({files.length})</h3>
+              <h3 className="font-medium">Selected Files ({files.length})</h3>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => simulateUpload()}
                 disabled={uploading || files.length === 0}
               >
-                {uploading ? "Wird hochgeladen..." : "Hochladen starten"}
+                {uploading ? "Uploading..." : "Start Upload"}
               </Button>
             </div>
 
@@ -165,11 +165,11 @@ export function DocumentUploader() {
                   <div className="flex items-center gap-3">
                     {uploadStatus[file.name] === "success" ? (
                       <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-                        <CheckCircle2 className="h-3 w-3 mr-1" /> Erfolg
+                        <CheckCircle2 className="h-3 w-3 mr-1" /> Success
                       </Badge>
                     ) : uploadStatus[file.name] === "error" ? (
                       <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
-                        <AlertTriangle className="h-3 w-3 mr-1" /> Fehler
+                        <AlertTriangle className="h-3 w-3 mr-1" /> Error
                       </Badge>
                     ) : uploadProgress[file.name] > 0 ? (
                       <div className="w-24 flex items-center gap-2">
@@ -177,7 +177,7 @@ export function DocumentUploader() {
                         <span className="text-xs">{Math.round(uploadProgress[file.name])}%</span>
                       </div>
                     ) : (
-                      <Badge variant="outline">Bereit</Badge>
+                      <Badge variant="outline">Ready</Badge>
                     )}
 
                     <Button
@@ -187,7 +187,7 @@ export function DocumentUploader() {
                       disabled={uploading && uploadProgress[file.name] > 0 && uploadProgress[file.name] < 100}
                     >
                       <X className="h-4 w-4" />
-                      <span className="sr-only">Entfernen</span>
+                      <span className="sr-only">Remove</span>
                     </Button>
                   </div>
                 </div>

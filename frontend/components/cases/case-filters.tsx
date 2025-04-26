@@ -10,18 +10,20 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { cn } from "@/lib/utils"
 
 const jurisdictions = [
-  { label: "Deutschland", value: "de" },
+  { label: "Germany", value: "de" },
   { label: "EU", value: "eu" },
   { label: "USA", value: "us" },
   { label: "International", value: "int" },
 ]
 
 const legalAreas = [
-  { label: "Produkthaftung", value: "product" },
-  { label: "Patentrecht", value: "patent" },
-  { label: "Arbeitsrecht", value: "labor" },
-  { label: "Datenschutz", value: "privacy" },
-  { label: "Vertragsrecht", value: "contract" },
+  { label: "Product and litigation", value: "product-litigation" },
+  { label: "Corporate financing, financial services, and M&A", value: "corporate-finance" },
+  { label: "Intellectual property law", value: "ip-law" },
+  { label: "Data and digital law, legal operations, coordination of antitrust law", value: "data-digital" },
+  { label: "BMW Group compliance", value: "compliance" },
+  { label: "Labor and social law", value: "labor-social" },
+  { label: "Tax law", value: "tax" },
 ]
 
 export function CaseFilters() {
@@ -35,7 +37,7 @@ export function CaseFilters() {
   return (
     <div className="flex flex-col gap-4 md:flex-row">
       <Input
-        placeholder="Suche nach Fall-ID oder Bezeichnung..."
+        placeholder="Search by case ID or name..."
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
         className="md:w-1/3"
@@ -45,10 +47,11 @@ export function CaseFilters() {
           <SelectValue placeholder="Status" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">Alle Status</SelectItem>
-          <SelectItem value="in-progress">In Bearbeitung</SelectItem>
-          <SelectItem value="critical">Kritisch</SelectItem>
-          <SelectItem value="completed">Abgeschlossen</SelectItem>
+          <SelectItem value="all">All Statuses</SelectItem>
+          <SelectItem value="not-started">Not Started Yet</SelectItem>
+          <SelectItem value="in-progress">In Progress</SelectItem>
+          <SelectItem value="critical">Critical</SelectItem>
+          <SelectItem value="completed">Completed</SelectItem>
         </SelectContent>
       </Select>
       <Popover open={jurisdictionOpen} onOpenChange={setJurisdictionOpen}>
@@ -59,15 +62,15 @@ export function CaseFilters() {
             aria-expanded={jurisdictionOpen}
             className="md:w-[200px] justify-between"
           >
-            {selectedJurisdiction ? jurisdictions.find((j) => j.value === selectedJurisdiction)?.label : "Jurisdiktion"}
+            {selectedJurisdiction ? jurisdictions.find((j) => j.value === selectedJurisdiction)?.label : "Jurisdiction"}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="md:w-[200px] p-0">
           <Command>
-            <CommandInput placeholder="Jurisdiktion suchen..." />
+            <CommandInput placeholder="Search jurisdiction..." />
             <CommandList>
-              <CommandEmpty>Keine Jurisdiktion gefunden.</CommandEmpty>
+              <CommandEmpty>No jurisdiction found.</CommandEmpty>
               <CommandGroup>
                 {jurisdictions.map((jurisdiction) => (
                   <CommandItem
@@ -100,15 +103,15 @@ export function CaseFilters() {
             aria-expanded={legalAreaOpen}
             className="md:w-[200px] justify-between"
           >
-            {selectedLegalArea ? legalAreas.find((la) => la.value === selectedLegalArea)?.label : "Rechtsgebiet"}
+            {selectedLegalArea ? legalAreas.find((la) => la.value === selectedLegalArea)?.label : "Legal Area"}
             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="md:w-[200px] p-0">
           <Command>
-            <CommandInput placeholder="Rechtsgebiet suchen..." />
+            <CommandInput placeholder="Search legal area..." />
             <CommandList>
-              <CommandEmpty>Kein Rechtsgebiet gefunden.</CommandEmpty>
+              <CommandEmpty>No legal area found.</CommandEmpty>
               <CommandGroup>
                 {legalAreas.map((legalArea) => (
                   <CommandItem
@@ -134,7 +137,7 @@ export function CaseFilters() {
         </PopoverContent>
       </Popover>
       <Button variant="secondary" className="md:ml-auto">
-        Filter zurücksetzen
+        Reset Filters
       </Button>
     </div>
   )

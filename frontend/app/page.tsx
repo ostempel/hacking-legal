@@ -52,7 +52,7 @@ export default function SelectModePage() {
                 className="w-full"
                 onClick={(e) => {
                   e.stopPropagation()
-                  handleModeSelect("legal")
+                  handleModeSelect("legal") 
                 }}
               >
                 Continue

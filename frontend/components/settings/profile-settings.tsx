@@ -18,11 +18,11 @@ export function ProfileSettings() {
         <CardHeader>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between">
             <div>
-              <CardTitle>Persönliche Informationen</CardTitle>
-              <CardDescription>Verwalten Sie Ihre persönlichen Informationen und Einstellungen</CardDescription>
+              <CardTitle>Personal Information</CardTitle>
+              <CardDescription>Manage your personal information and settings</CardDescription>
             </div>
             <Button variant={isEditing ? "default" : "outline"} onClick={() => setIsEditing(!isEditing)}>
-              {isEditing ? "Speichern" : "Bearbeiten"}
+              {isEditing ? "Save" : "Edit"}
             </Button>
           </div>
         </CardHeader>
@@ -35,7 +35,7 @@ export function ProfileSettings() {
               </Avatar>
               {isEditing && (
                 <Button variant="outline" size="sm">
-                  Bild ändern
+                  Change Image
                 </Button>
               )}
             </div>
@@ -43,36 +43,36 @@ export function ProfileSettings() {
             <div className="flex-1 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="first-name">Vorname</Label>
+                  <Label htmlFor="first-name">First Name</Label>
                   <Input id="first-name" defaultValue="Julia" disabled={!isEditing} />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="last-name">Nachname</Label>
+                  <Label htmlFor="last-name">Last Name</Label>
                   <Input id="last-name" defaultValue="Schmidt" disabled={!isEditing} />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">E-Mail</Label>
+                <Label htmlFor="email">Email</Label>
                 <Input id="email" type="email" defaultValue="j.schmidt@example.com" disabled={!isEditing} />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="role">Position</Label>
-                <Input id="role" defaultValue="Rechtsanwältin" disabled={!isEditing} />
+                <Input id="role" defaultValue="Attorney" disabled={!isEditing} />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="department">Abteilung</Label>
+                <Label htmlFor="department">Department</Label>
                 <Select defaultValue="legal" disabled={!isEditing}>
                   <SelectTrigger id="department">
-                    <SelectValue placeholder="Abteilung auswählen" />
+                    <SelectValue placeholder="Select department" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="legal">Rechtsabteilung</SelectItem>
+                    <SelectItem value="legal">Legal Department</SelectItem>
                     <SelectItem value="compliance">Compliance</SelectItem>
                     <SelectItem value="management">Management</SelectItem>
-                    <SelectItem value="rd">Forschung & Entwicklung</SelectItem>
+                    <SelectItem value="rd">Research & Development</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -83,43 +83,39 @@ export function ProfileSettings() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Benachrichtigungen</CardTitle>
-          <CardDescription>Konfigurieren Sie, wie und wann Sie benachrichtigt werden möchten</CardDescription>
+          <CardTitle>Notifications</CardTitle>
+          <CardDescription>Configure how and when you want to be notified</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label htmlFor="email-notifications">E-Mail-Benachrichtigungen</Label>
-                <p className="text-sm text-muted-foreground">Erhalten Sie Benachrichtigungen per E-Mail</p>
+                <Label htmlFor="email-notifications">Email Notifications</Label>
+                <p className="text-sm text-muted-foreground">Receive notifications via email</p>
               </div>
               <Switch id="email-notifications" defaultChecked disabled={!isEditing} />
             </div>
 
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label htmlFor="browser-notifications">Browser-Benachrichtigungen</Label>
-                <p className="text-sm text-muted-foreground">Erhalten Sie Benachrichtigungen im Browser</p>
+                <Label htmlFor="browser-notifications">Browser Notifications</Label>
+                <p className="text-sm text-muted-foreground">Receive notifications in the browser</p>
               </div>
               <Switch id="browser-notifications" defaultChecked disabled={!isEditing} />
             </div>
 
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label htmlFor="daily-digest">Tägliche Zusammenfassung</Label>
-                <p className="text-sm text-muted-foreground">
-                  Erhalten Sie eine tägliche Zusammenfassung aller Aktivitäten
-                </p>
+                <Label htmlFor="daily-digest">Daily Digest</Label>
+                <p className="text-sm text-muted-foreground">Receive a daily summary of all activities</p>
               </div>
               <Switch id="daily-digest" disabled={!isEditing} />
             </div>
 
             <div className="flex items-center justify-between">
               <div className="space-y-0.5">
-                <Label htmlFor="critical-alerts">Kritische Warnungen</Label>
-                <p className="text-sm text-muted-foreground">
-                  Erhalten Sie sofortige Benachrichtigungen bei kritischen Ereignissen
-                </p>
+                <Label htmlFor="critical-alerts">Critical Alerts</Label>
+                <p className="text-sm text-muted-foreground">Receive immediate notifications for critical events</p>
               </div>
               <Switch id="critical-alerts" defaultChecked disabled={!isEditing} />
             </div>
@@ -129,8 +125,8 @@ export function ProfileSettings() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Standardeinstellungen</CardTitle>
-          <CardDescription>Konfigurieren Sie Ihre bevorzugten Standardeinstellungen</CardDescription>
+          <CardTitle>Default Settings</CardTitle>
+          <CardDescription>Configure your preferred default settings</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="space-y-4">
@@ -149,27 +145,27 @@ export function ProfileSettings() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="default-language">Standardsprache</Label>
-              <Select defaultValue="de" disabled={!isEditing}>
+              <Label htmlFor="default-language">Default Language</Label>
+              <Select defaultValue="en" disabled={!isEditing}>
                 <SelectTrigger id="default-language">
-                  <SelectValue placeholder="Standardsprache auswählen" />
+                  <SelectValue placeholder="Select default language" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="de">Deutsch</SelectItem>
-                  <SelectItem value="en">Englisch</SelectItem>
-                  <SelectItem value="fr">Französisch</SelectItem>
+                  <SelectItem value="de">German</SelectItem>
+                  <SelectItem value="en">English</SelectItem>
+                  <SelectItem value="fr">French</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="default-jurisdiction">Standard-Jurisdiktion</Label>
+              <Label htmlFor="default-jurisdiction">Default Jurisdiction</Label>
               <Select defaultValue="de" disabled={!isEditing}>
                 <SelectTrigger id="default-jurisdiction">
-                  <SelectValue placeholder="Standard-Jurisdiktion auswählen" />
+                  <SelectValue placeholder="Select default jurisdiction" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="de">Deutschland</SelectItem>
+                  <SelectItem value="de">Germany</SelectItem>
                   <SelectItem value="eu">EU</SelectItem>
                   <SelectItem value="us">USA</SelectItem>
                   <SelectItem value="int">International</SelectItem>

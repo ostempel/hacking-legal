@@ -23,7 +23,7 @@ interface TeamMemberCardProps {
 
 export function TeamMemberCard({ member }: TeamMemberCardProps) {
   return (
-    <Card className="overflow-hidden">
+    <Card>
       <div className="aspect-square relative overflow-hidden">
         <Avatar className="h-full w-full rounded-none">
           <AvatarImage src={member.avatar || "/placeholder.svg"} alt={member.name} className="object-cover" />

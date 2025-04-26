@@ -27,9 +27,9 @@ export function DocumentAnalysis({ document }: DocumentAnalysisProps) {
       <Card>
         <CardContent className="flex flex-col items-center justify-center py-12">
           <AlertTriangle className="h-12 w-12 text-amber-500 mb-4" />
-          <h3 className="text-lg font-medium">Keine Analyse verfügbar</h3>
+          <h3 className="text-lg font-medium">No analysis available</h3>
           <p className="text-sm text-muted-foreground mt-2">
-            Dieses Dokument wurde noch nicht analysiert. Starten Sie die Analyse, um Erkenntnisse zu erhalten.
+            This document has not been analyzed yet. Start the analysis to get insights.
           </p>
         </CardContent>
       </Card>
@@ -40,8 +40,8 @@ export function DocumentAnalysis({ document }: DocumentAnalysisProps) {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>KI-Zusammenfassung</CardTitle>
-          <CardDescription>Automatisch generierte Zusammenfassung des Dokuments</CardDescription>
+          <CardTitle>AI Summary</CardTitle>
+          <CardDescription>Automatically generated summary of the document</CardDescription>
         </CardHeader>
         <CardContent>
           <p>{document.analysis.summary}</p>
@@ -50,9 +50,9 @@ export function DocumentAnalysis({ document }: DocumentAnalysisProps) {
 
       <Tabs defaultValue="key-points" className="w-full">
         <TabsList>
-          <TabsTrigger value="key-points">Schlüsselpunkte</TabsTrigger>
-          <TabsTrigger value="relevant-sections">Relevante Abschnitte</TabsTrigger>
-          <TabsTrigger value="recommendations">Empfehlungen</TabsTrigger>
+          <TabsTrigger value="key-points">Key Points</TabsTrigger>
+          <TabsTrigger value="relevant-sections">Relevant Sections</TabsTrigger>
+          <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
         </TabsList>
 
         <TabsContent value="key-points" className="space-y-4 pt-4">

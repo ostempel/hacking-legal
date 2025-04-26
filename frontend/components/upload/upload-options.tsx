@@ -11,17 +11,17 @@ export function UploadOptions() {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Upload-Optionen</CardTitle>
+          <CardTitle>Upload Options</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="case-id">Fall-ID</Label>
+            <Label htmlFor="case-id">Case ID</Label>
             <Select defaultValue="new">
               <SelectTrigger id="case-id">
-                <SelectValue placeholder="Fall auswählen" />
+                <SelectValue placeholder="Select case" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="new">Neuer Fall erstellen</SelectItem>
+                <SelectItem value="new">Create new case</SelectItem>
                 <SelectItem value="C-2023-001">C-2023-001</SelectItem>
                 <SelectItem value="C-2023-002">C-2023-002</SelectItem>
                 <SelectItem value="C-2024-001">C-2024-001</SelectItem>
@@ -30,31 +30,31 @@ export function UploadOptions() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="document-type">Dokumenttyp</Label>
+            <Label htmlFor="document-type">Document Type</Label>
             <Select defaultValue="auto">
               <SelectTrigger id="document-type">
-                <SelectValue placeholder="Dokumenttyp auswählen" />
+                <SelectValue placeholder="Select document type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="auto">Automatisch erkennen</SelectItem>
-                <SelectItem value="patent">Patentdokumente</SelectItem>
-                <SelectItem value="technical">Technische Dokumente</SelectItem>
-                <SelectItem value="correspondence">Korrespondenz</SelectItem>
-                <SelectItem value="evidence">Beweismaterial</SelectItem>
-                <SelectItem value="market">Marktdaten</SelectItem>
+                <SelectItem value="auto">Auto-detect</SelectItem>
+                <SelectItem value="patent">Patent Documents</SelectItem>
+                <SelectItem value="technical">Technical Documents</SelectItem>
+                <SelectItem value="correspondence">Correspondence</SelectItem>
+                <SelectItem value="evidence">Evidence</SelectItem>
+                <SelectItem value="market">Market Data</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="jurisdiction">Jurisdiktion</Label>
+            <Label htmlFor="jurisdiction">Jurisdiction</Label>
             <Select defaultValue="auto">
               <SelectTrigger id="jurisdiction">
-                <SelectValue placeholder="Jurisdiktion auswählen" />
+                <SelectValue placeholder="Select jurisdiction" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="auto">Automatisch erkennen</SelectItem>
-                <SelectItem value="de">Deutschland</SelectItem>
+                <SelectItem value="auto">Auto-detect</SelectItem>
+                <SelectItem value="de">Germany</SelectItem>
                 <SelectItem value="eu">EU</SelectItem>
                 <SelectItem value="us">USA</SelectItem>
                 <SelectItem value="int">International</SelectItem>
@@ -63,46 +63,46 @@ export function UploadOptions() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="legal-area">Rechtsgebiet</Label>
+            <Label htmlFor="legal-area">Legal Area</Label>
             <Select defaultValue="auto">
               <SelectTrigger id="legal-area">
-                <SelectValue placeholder="Rechtsgebiet auswählen" />
+                <SelectValue placeholder="Select legal area" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="auto">Automatisch erkennen</SelectItem>
-                <SelectItem value="product">Produkthaftung</SelectItem>
-                <SelectItem value="patent">Patentrecht</SelectItem>
-                <SelectItem value="labor">Arbeitsrecht</SelectItem>
-                <SelectItem value="privacy">Datenschutz</SelectItem>
-                <SelectItem value="contract">Vertragsrecht</SelectItem>
+                <SelectItem value="auto">Auto-detect</SelectItem>
+                <SelectItem value="product">Product Liability</SelectItem>
+                <SelectItem value="patent">Patent Law</SelectItem>
+                <SelectItem value="labor">Labor Law</SelectItem>
+                <SelectItem value="privacy">Data Protection</SelectItem>
+                <SelectItem value="contract">Contract Law</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="tags">Tags (durch Komma getrennt)</Label>
-            <Input id="tags" placeholder="z.B. wichtig, dringend, vertraulich" />
+            <Label htmlFor="tags">Tags (comma separated)</Label>
+            <Input id="tags" placeholder="e.g. important, urgent, confidential" />
           </div>
 
           <div className="space-y-4 pt-2">
             <div className="flex items-center space-x-2">
               <Checkbox id="analyze" defaultChecked />
-              <Label htmlFor="analyze">Automatisch analysieren</Label>
+              <Label htmlFor="analyze">Automatically analyze</Label>
             </div>
 
             <div className="flex items-center space-x-2">
               <Checkbox id="ocr" defaultChecked />
-              <Label htmlFor="ocr">OCR für Bilddateien und PDFs</Label>
+              <Label htmlFor="ocr">OCR for images and PDFs</Label>
             </div>
 
             <div className="flex items-center space-x-2">
               <Checkbox id="translate" />
-              <Label htmlFor="translate">Automatisch übersetzen</Label>
+              <Label htmlFor="translate">Automatically translate</Label>
             </div>
 
             <div className="flex items-center space-x-2">
               <Checkbox id="confidential" />
-              <Label htmlFor="confidential">Als vertraulich markieren</Label>
+              <Label htmlFor="confidential">Mark as confidential</Label>
             </div>
           </div>
         </CardContent>
@@ -112,25 +112,25 @@ export function UploadOptions() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Lightbulb className="h-5 w-5 text-amber-500" />
-            Tipps
+            Tips
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4 text-sm">
           <p>
-            <strong>Batch-Upload:</strong> Für mehrere Dokumente können Sie eine ZIP-Datei hochladen.
+            <strong>Batch Upload:</strong> For multiple documents, you can upload a ZIP file.
           </p>
           <p>
-            <strong>E-Mail-Integration:</strong> Verbinden Sie Ihr E-Mail-Konto, um Dokumente direkt zu importieren.
+            <strong>Email Integration:</strong> Connect your email account to import documents directly.
           </p>
           <p>
-            <strong>Automatische Analyse:</strong> Die KI-Analyse erkennt Jurisdiktion, Rechtsgebiet und Inkonsistenzen.
+            <strong>Automatic Analysis:</strong> The AI analysis detects jurisdiction, legal area, and inconsistencies.
           </p>
         </CardContent>
       </Card>
 
       <Button variant="outline" className="w-full">
         <Cog className="mr-2 h-4 w-4" />
-        Erweiterte Einstellungen
+        Advanced Settings
       </Button>
     </div>
   )

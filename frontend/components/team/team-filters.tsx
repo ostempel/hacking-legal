@@ -17,7 +17,7 @@ export function TeamFilters() {
         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input
           type="search"
-          placeholder="Nach Namen oder Expertise suchen..."
+          placeholder="Search by name or expertise..."
           className="w-full pl-8"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -25,14 +25,14 @@ export function TeamFilters() {
       </div>
       <Select value={department} onValueChange={setDepartment}>
         <SelectTrigger className="w-full md:w-[200px]">
-          <SelectValue placeholder="Abteilung" />
+          <SelectValue placeholder="Department" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">Alle Abteilungen</SelectItem>
-          <SelectItem value="legal">Rechtsabteilung</SelectItem>
+          <SelectItem value="all">All Departments</SelectItem>
+          <SelectItem value="legal">Legal Department</SelectItem>
           <SelectItem value="compliance">Compliance</SelectItem>
-          <SelectItem value="patent">Patentrecht</SelectItem>
-          <SelectItem value="analysis">Analyse</SelectItem>
+          <SelectItem value="patent">Patent Law</SelectItem>
+          <SelectItem value="analysis">Analysis</SelectItem>
         </SelectContent>
       </Select>
       <Select value={role} onValueChange={setRole}>
@@ -40,16 +40,16 @@ export function TeamFilters() {
           <SelectValue placeholder="Position" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="all">Alle Positionen</SelectItem>
+          <SelectItem value="all">All Positions</SelectItem>
           <SelectItem value="partner">Partner</SelectItem>
-          <SelectItem value="senior">Senior Anwalt</SelectItem>
+          <SelectItem value="senior">Senior Attorney</SelectItem>
           <SelectItem value="associate">Associate</SelectItem>
           <SelectItem value="analyst">Analyst</SelectItem>
-          <SelectItem value="specialist">Spezialist</SelectItem>
+          <SelectItem value="specialist">Specialist</SelectItem>
         </SelectContent>
       </Select>
       <Button variant="secondary" className="md:ml-auto">
-        Filter zurücksetzen
+        Reset Filters
       </Button>
     </div>
   )

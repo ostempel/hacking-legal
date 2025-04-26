@@ -13,11 +13,11 @@ import { Upload, X, CheckCircle2, AlertTriangle, FileText, FileIcon as FilePdf, 
 
 // Mock cases data
 const cases = [
-  { id: "C-2023-001", name: "Produkthaftung XYZ GmbH" },
-  { id: "C-2023-002", name: "Patentstreit TechCorp" },
-  { id: "C-2023-003", name: "Arbeitsrecht Compliance" },
-  { id: "C-2024-001", name: "Datenschutzprüfung" },
-  { id: "C-2024-002", name: "Vertragsanalyse Lieferanten" },
+  { id: "C-2023-001", name: "Product Liability XYZ Corp" },
+  { id: "C-2023-002", name: "Patent Dispute TechCorp" },
+  { id: "C-2023-003", name: "Labor Law Compliance" },
+  { id: "C-2024-001", name: "Data Protection Audit" },
+  { id: "C-2024-002", name: "Supplier Contract Analysis" },
 ]
 
 export function DocumentUploader() {
@@ -115,17 +115,17 @@ export function DocumentUploader() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Dokumente hochladen</CardTitle>
+        <CardTitle>Upload Documents</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="space-y-2">
-          <Label htmlFor="case-select">Fall auswählen (optional)</Label>
+          <Label htmlFor="case-select">Select Case (optional)</Label>
           <Select value={selectedCase || ""} onValueChange={setSelectedCase}>
             <SelectTrigger id="case-select">
-              <SelectValue placeholder="Fall auswählen" />
+              <SelectValue placeholder="Select a case" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="none">Keinem Fall zuordnen</SelectItem>
+              <SelectItem value="none">No case assignment</SelectItem>
               {cases.map((caseItem) => (
                 <SelectItem key={caseItem.id} value={caseItem.id}>
                   {caseItem.id}: {caseItem.name}
@@ -147,10 +147,10 @@ export function DocumentUploader() {
           />
           <label htmlFor="file-upload" className="flex flex-col items-center justify-center cursor-pointer">
             <Upload className="h-10 w-10 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-medium mb-2">Dateien hier ablegen oder klicken zum Auswählen</h3>
-            <p className="text-sm text-muted-foreground mb-4">Unterstützte Formate: PDF, DOCX, TXT, PNG, JPG</p>
+            <h3 className="text-lg font-medium mb-2">Drop files here or click to select</h3>
+            <p className="text-sm text-muted-foreground mb-4">Supported formats: PDF, DOCX, TXT, PNG, JPG</p>
             <Button variant="outline" disabled={uploading}>
-              Dateien auswählen
+              Select Files
             </Button>
           </label>
         </div>
@@ -158,14 +158,14 @@ export function DocumentUploader() {
         {files.length > 0 && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="font-medium">Ausgewählte Dateien ({files.length})</h3>
+              <h3 className="font-medium">Selected Files ({files.length})</h3>
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => simulateUpload()}
                 disabled={uploading || files.length === 0}
               >
-                {uploading ? "Wird hochgeladen..." : "Hochladen starten"}
+                {uploading ? "Uploading..." : "Start Upload"}
               </Button>
             </div>
 
@@ -183,11 +183,11 @@ export function DocumentUploader() {
                   <div className="flex items-center gap-3">
                     {uploadStatus[file.name] === "success" ? (
                       <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-                        <CheckCircle2 className="h-3 w-3 mr-1" /> Erfolg
+                        <CheckCircle2 className="h-3 w-3 mr-1" /> Success
                       </Badge>
                     ) : uploadStatus[file.name] === "error" ? (
                       <Badge variant="outline" className="bg-red-50 text-red-700 border-red-200">
-                        <AlertTriangle className="h-3 w-3 mr-1" /> Fehler
+                        <AlertTriangle className="h-3 w-3 mr-1" /> Error
                       </Badge>
                     ) : uploadProgress[file.name] > 0 ? (
                       <div className="w-24 flex items-center gap-2">
@@ -195,7 +195,7 @@ export function DocumentUploader() {
                         <span className="text-xs">{Math.round(uploadProgress[file.name])}%</span>
                       </div>
                     ) : (
-                      <Badge variant="outline">Bereit</Badge>
+                      <Badge variant="outline">Ready</Badge>
                     )}
 
                     <Button
@@ -205,7 +205,7 @@ export function DocumentUploader() {
                       disabled={uploading && uploadProgress[file.name] > 0 && uploadProgress[file.name] < 100}
                     >
                       <X className="h-4 w-4" />
-                      <span className="sr-only">Entfernen</span>
+                      <span className="sr-only">Remove</span>
                     </Button>
                   </div>
                 </div>

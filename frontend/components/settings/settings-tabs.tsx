@@ -12,7 +12,10 @@ export function SettingsTabs() {
   const handleTabChange = (value: string) => {
     const params = new URLSearchParams(searchParams)
     params.set("tab", value)
-    router.push(`?${params.toString()}`)
+
+    // Use replace instead of push to avoid adding to history stack
+    // and prevent any unwanted redirects
+    router.replace(`/settings?${params.toString()}`, { scroll: false })
   }
 
   return (
@@ -24,7 +27,7 @@ export function SettingsTabs() {
         data-state={tab === "profile" ? "active" : "inactive"}
       >
         <User className="h-4 w-4" />
-        <span>Profil</span>
+        <span>Profile</span>
       </TabsTrigger>
       <TabsTrigger
         value="security"
@@ -33,7 +36,7 @@ export function SettingsTabs() {
         data-state={tab === "security" ? "active" : "inactive"}
       >
         <Key className="h-4 w-4" />
-        <span>Sicherheit</span>
+        <span>Security</span>
       </TabsTrigger>
       <TabsTrigger
         value="logout"
@@ -42,7 +45,7 @@ export function SettingsTabs() {
         data-state={tab === "logout" ? "active" : "inactive"}
       >
         <LogOut className="h-4 w-4" />
-        <span>Abmelden</span>
+        <span>Logout</span>
       </TabsTrigger>
     </TabsList>
   )

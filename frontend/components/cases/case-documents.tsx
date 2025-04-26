@@ -27,62 +27,62 @@ interface CaseDocumentsProps {
 const documents = [
   {
     id: "doc-001",
-    name: "Patentanmeldung_TechCorp.pdf",
+    name: "Patent_Application_TechCorp.pdf",
     type: "pdf",
     size: "2.4 MB",
     uploadedBy: "Dr. Schmidt",
     uploadedAt: "2023-11-28",
-    category: "Patentdokumente",
+    category: "Patent Documents",
     analyzed: true,
   },
   {
     id: "doc-002",
-    name: "Technische_Spezifikation.docx",
+    name: "Technical_Specification.docx",
     type: "docx",
     size: "1.8 MB",
-    uploadedBy: "Anna Müller",
+    uploadedBy: "Anna Miller",
     uploadedAt: "2023-11-29",
-    category: "Technische Dokumente",
+    category: "Technical Documents",
     analyzed: true,
   },
   {
     id: "doc-003",
-    name: "Korrespondenz_Anwalt.eml",
+    name: "Attorney_Correspondence.eml",
     type: "email",
     size: "156 KB",
     uploadedBy: "System",
     uploadedAt: "2023-12-01",
-    category: "Korrespondenz",
+    category: "Correspondence",
     analyzed: true,
   },
   {
     id: "doc-004",
-    name: "Produktfotos.zip",
+    name: "Product_Photos.zip",
     type: "image",
     size: "8.2 MB",
     uploadedBy: "Thomas Weber",
     uploadedAt: "2023-12-03",
-    category: "Beweismaterial",
+    category: "Evidence",
     analyzed: true,
   },
   {
     id: "doc-005",
-    name: "Marktanalyse_2023.xlsx",
+    name: "Market_Analysis_2023.xlsx",
     type: "xlsx",
     size: "3.1 MB",
-    uploadedBy: "Anna Müller",
+    uploadedBy: "Anna Miller",
     uploadedAt: "2023-12-05",
-    category: "Marktdaten",
+    category: "Market Data",
     analyzed: false,
   },
   {
     id: "doc-006",
-    name: "Konkurrenzpatente.pdf",
+    name: "Competitor_Patents.pdf",
     type: "pdf",
     size: "4.7 MB",
     uploadedBy: "Dr. Schmidt",
     uploadedAt: "2023-12-10",
-    category: "Patentdokumente",
+    category: "Patent Documents",
     analyzed: false,
   },
 ]
@@ -116,22 +116,22 @@ export function CaseDocuments({ id }: CaseDocumentsProps) {
       <CardHeader>
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <CardTitle>Dokumente</CardTitle>
-            <CardDescription>Alle Dokumente und Beweismaterialien für Fall {id}</CardDescription>
+            <CardTitle>Documents</CardTitle>
+            <CardDescription>All documents and evidence for case {id}</CardDescription>
           </div>
           <div className="flex gap-2">
             <div className="relative w-full md:w-64">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 type="search"
-                placeholder="Dokumente durchsuchen..."
+                placeholder="Search documents..."
                 className="w-full pl-8"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
             <Button>
-              <Upload className="mr-2 h-4 w-4" /> Hochladen
+              <Upload className="mr-2 h-4 w-4" /> Upload
             </Button>
           </div>
         </div>
@@ -141,12 +141,12 @@ export function CaseDocuments({ id }: CaseDocumentsProps) {
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
-              <TableHead>Kategorie</TableHead>
-              <TableHead>Hochgeladen von</TableHead>
-              <TableHead>Datum</TableHead>
-              <TableHead>Größe</TableHead>
+              <TableHead>Category</TableHead>
+              <TableHead>Uploaded by</TableHead>
+              <TableHead>Date</TableHead>
+              <TableHead>Size</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead className="text-right">Aktionen</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -160,16 +160,16 @@ export function CaseDocuments({ id }: CaseDocumentsProps) {
                 </TableCell>
                 <TableCell>{doc.category}</TableCell>
                 <TableCell>{doc.uploadedBy}</TableCell>
-                <TableCell>{new Date(doc.uploadedAt).toLocaleDateString("de-DE")}</TableCell>
+                <TableCell>{new Date(doc.uploadedAt).toLocaleDateString("en-US")}</TableCell>
                 <TableCell>{doc.size}</TableCell>
                 <TableCell>
                   {doc.analyzed ? (
                     <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-                      Analysiert
+                      Analyzed
                     </Badge>
                   ) : (
                     <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
-                      Ausstehend
+                      Pending
                     </Badge>
                   )}
                 </TableCell>
@@ -178,18 +178,18 @@ export function CaseDocuments({ id }: CaseDocumentsProps) {
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon">
                         <MoreVertical className="h-4 w-4" />
-                        <span className="sr-only">Aktionen</span>
+                        <span className="sr-only">Actions</span>
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem>
-                        <Eye className="mr-2 h-4 w-4" /> Anzeigen
+                        <Eye className="mr-2 h-4 w-4" /> View
                       </DropdownMenuItem>
                       <DropdownMenuItem>
-                        <Download className="mr-2 h-4 w-4" /> Herunterladen
+                        <Download className="mr-2 h-4 w-4" /> Download
                       </DropdownMenuItem>
                       <DropdownMenuItem className="text-destructive">
-                        <Trash2 className="mr-2 h-4 w-4" /> Löschen
+                        <Trash2 className="mr-2 h-4 w-4" /> Delete
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

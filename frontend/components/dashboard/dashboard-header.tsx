@@ -22,14 +22,14 @@ export function DashboardHeader() {
     <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
       <div>
         <h1 className="text-3xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground">Übersicht aller Fälle und Aktivitäten</p>
+        <p className="text-muted-foreground">Overview of all cases and activities</p>
       </div>
       <div className="flex items-center gap-4">
         <div className="relative w-full md:w-64">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             type="search"
-            placeholder="Suche..."
+            placeholder="Search..."
             className="w-full pl-8"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -45,33 +45,35 @@ export function DashboardHeader() {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-80">
-            <DropdownMenuLabel>Benachrichtigungen</DropdownMenuLabel>
+            <DropdownMenuLabel>Notifications</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem className="cursor-pointer">
               <div className="flex flex-col gap-1">
-                <p className="font-medium">Neue Dokumente hochgeladen</p>
-                <p className="text-sm text-muted-foreground">Fall #1234 - 5 neue Dokumente</p>
-                <p className="text-xs text-muted-foreground">Vor 10 Minuten</p>
+                <p className="font-medium">New documents uploaded</p>
+                <p className="text-sm text-muted-foreground">Case #1234 - 5 new documents</p>
+                <p className="text-xs text-muted-foreground">10 minutes ago</p>
               </div>
             </DropdownMenuItem>
             <DropdownMenuItem className="cursor-pointer">
               <div className="flex flex-col gap-1">
-                <p className="font-medium">Analyse abgeschlossen</p>
-                <p className="text-sm text-muted-foreground">Fall #5678 - Analyse bereit</p>
-                <p className="text-xs text-muted-foreground">Vor 1 Stunde</p>
+                <p className="font-medium">Analysis completed</p>
+                <p className="text-sm text-muted-foreground">Case #5678 - Analysis ready</p>
+                <p className="text-xs text-muted-foreground">1 hour ago</p>
               </div>
             </DropdownMenuItem>
             <DropdownMenuItem className="cursor-pointer">
               <div className="flex flex-col gap-1">
-                <p className="font-medium">Neuer Kommentar</p>
-                <p className="text-sm text-muted-foreground">Dr. Schmidt hat einen Kommentar hinzugefügt</p>
-                <p className="text-xs text-muted-foreground">Vor 3 Stunden</p>
+                <p className="font-medium">New comment</p>
+                <p className="text-sm text-muted-foreground">Dr. Schmidt added a comment</p>
+                <p className="text-xs text-muted-foreground">3 hours ago</p>
               </div>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-        <Button>
-          <Plus className="mr-2 h-4 w-4" /> Neuer Fall
+        <Button variant="destructive" asChild>
+          <Link href="/cases/new">
+            <Plus className="mr-2 h-4 w-4" /> New Case
+          </Link>
         </Button>
 
         {/* Replace the dropdown menu with a direct link to settings */}

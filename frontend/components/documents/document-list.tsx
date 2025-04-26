@@ -13,106 +13,106 @@ import Link from "next/link"
 const mockDocuments = [
   {
     id: "doc-001",
-    name: "Patentanmeldung_TechCorp.pdf",
+    name: "Patent_Application_TechCorp.pdf",
     type: "pdf",
     size: "2.4 MB",
     uploadedBy: "Dr. Schmidt",
     uploadedAt: "2023-11-28",
     caseId: "C-2023-002",
-    caseName: "Patentstreit TechCorp",
+    caseName: "Patent Dispute TechCorp",
     analyzed: true,
   },
   {
     id: "doc-002",
-    name: "Technische_Spezifikation.docx",
+    name: "Technical_Specification.docx",
     type: "docx",
     size: "1.8 MB",
-    uploadedBy: "Anna Müller",
+    uploadedBy: "Anna Miller",
     uploadedAt: "2023-11-29",
     caseId: "C-2023-002",
-    caseName: "Patentstreit TechCorp",
+    caseName: "Patent Dispute TechCorp",
     analyzed: true,
   },
   {
     id: "doc-003",
-    name: "Korrespondenz_Anwalt.txt",
+    name: "Attorney_Correspondence.txt",
     type: "txt",
     size: "156 KB",
     uploadedBy: "System",
     uploadedAt: "2023-12-01",
     caseId: "C-2023-002",
-    caseName: "Patentstreit TechCorp",
+    caseName: "Patent Dispute TechCorp",
     analyzed: true,
   },
   {
     id: "doc-004",
-    name: "Produktfotos.jpg",
+    name: "Product_Photos.jpg",
     type: "jpg",
     size: "8.2 MB",
     uploadedBy: "Thomas Weber",
     uploadedAt: "2023-12-03",
     caseId: "C-2023-001",
-    caseName: "Produkthaftung XYZ GmbH",
+    caseName: "Product Liability XYZ Corp",
     analyzed: true,
   },
   {
     id: "doc-005",
-    name: "Marktanalyse_2023.docx",
+    name: "Market_Analysis_2023.docx",
     type: "docx",
     size: "3.1 MB",
-    uploadedBy: "Anna Müller",
+    uploadedBy: "Anna Miller",
     uploadedAt: "2023-12-05",
     caseId: "C-2023-001",
-    caseName: "Produkthaftung XYZ GmbH",
+    caseName: "Product Liability XYZ Corp",
     analyzed: false,
   },
   {
     id: "doc-006",
-    name: "Konkurrenzpatente.pdf",
+    name: "Competitor_Patents.pdf",
     type: "pdf",
     size: "4.7 MB",
     uploadedBy: "Dr. Schmidt",
     uploadedAt: "2023-12-10",
     caseId: "C-2023-002",
-    caseName: "Patentstreit TechCorp",
+    caseName: "Patent Dispute TechCorp",
     analyzed: false,
   },
   {
     id: "doc-007",
-    name: "Mitarbeiterbefragung.docx",
+    name: "Employee_Survey.docx",
     type: "docx",
     size: "1.2 MB",
-    uploadedBy: "Julia Becker",
+    uploadedBy: "Julia Baker",
     uploadedAt: "2024-01-15",
     caseId: "C-2023-003",
-    caseName: "Arbeitsrecht Compliance",
+    caseName: "Labor Law Compliance",
     analyzed: true,
   },
   {
     id: "doc-008",
-    name: "Datenschutzrichtlinien.pdf",
+    name: "Data_Protection_Guidelines.pdf",
     type: "pdf",
     size: "3.5 MB",
-    uploadedBy: "Anna Müller",
+    uploadedBy: "Anna Miller",
     uploadedAt: "2024-01-20",
     caseId: "C-2024-001",
-    caseName: "Datenschutzprüfung",
+    caseName: "Data Protection Audit",
     analyzed: true,
   },
   {
     id: "doc-009",
-    name: "Lieferantenvertrag.pdf",
+    name: "Supplier_Contract.pdf",
     type: "pdf",
     size: "2.8 MB",
     uploadedBy: "Thomas Weber",
     uploadedAt: "2024-02-05",
     caseId: "C-2024-002",
-    caseName: "Vertragsanalyse Lieferanten",
+    caseName: "Supplier Contract Analysis",
     analyzed: false,
   },
   {
     id: "doc-010",
-    name: "Unzugeordnetes_Dokument.pdf",
+    name: "Unassigned_Document.pdf",
     type: "pdf",
     size: "1.5 MB",
     uploadedBy: "System",
@@ -201,23 +201,23 @@ export function DocumentList({ sortField, sortDirection, selectedCase, searchQue
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Dokumente ({filteredDocuments.length})</CardTitle>
+        <CardTitle>Documents ({filteredDocuments.length})</CardTitle>
       </CardHeader>
       <CardContent>
         {filteredDocuments.length === 0 ? (
           <div className="text-center py-8">
-            <p className="text-muted-foreground">Keine Dokumente gefunden</p>
+            <p className="text-muted-foreground">No documents found</p>
           </div>
         ) : (
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Name</TableHead>
-                <TableHead>Fall</TableHead>
-                <TableHead>Datum</TableHead>
-                <TableHead>Größe</TableHead>
+                <TableHead>Case</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead>Size</TableHead>
                 <TableHead>Status</TableHead>
-                <TableHead className="text-right">Aktionen</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -237,19 +237,19 @@ export function DocumentList({ sortField, sortDirection, selectedCase, searchQue
                         {doc.caseName}
                       </Link>
                     ) : (
-                      <span className="text-muted-foreground">Nicht zugeordnet</span>
+                      <span className="text-muted-foreground">Unassigned</span>
                     )}
                   </TableCell>
-                  <TableCell>{new Date(doc.uploadedAt).toLocaleDateString("de-DE")}</TableCell>
+                  <TableCell>{new Date(doc.uploadedAt).toLocaleDateString("en-US")}</TableCell>
                   <TableCell>{doc.size}</TableCell>
                   <TableCell>
                     {doc.analyzed ? (
                       <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-                        Analysiert
+                        Analyzed
                       </Badge>
                     ) : (
                       <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
-                        Ausstehend
+                        Pending
                       </Badge>
                     )}
                   </TableCell>
@@ -258,25 +258,25 @@ export function DocumentList({ sortField, sortDirection, selectedCase, searchQue
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon">
                           <MoreHorizontal className="h-4 w-4" />
-                          <span className="sr-only">Aktionen</span>
+                          <span className="sr-only">Actions</span>
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem asChild>
                           <Link href={`/documents/${doc.id}`}>
-                            <Eye className="mr-2 h-4 w-4" /> Anzeigen
+                            <Eye className="mr-2 h-4 w-4" /> View
                           </Link>
                         </DropdownMenuItem>
                         <DropdownMenuItem>
-                          <Download className="mr-2 h-4 w-4" /> Herunterladen
+                          <Download className="mr-2 h-4 w-4" /> Download
                         </DropdownMenuItem>
                         {!doc.caseId && (
                           <DropdownMenuItem>
-                            <LinkIcon className="mr-2 h-4 w-4" /> Fall zuordnen
+                            <LinkIcon className="mr-2 h-4 w-4" /> Assign to Case
                           </DropdownMenuItem>
                         )}
                         <DropdownMenuItem className="text-destructive">
-                          <Trash2 className="mr-2 h-4 w-4" /> Löschen
+                          <Trash2 className="mr-2 h-4 w-4" /> Delete
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>

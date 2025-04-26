@@ -27,8 +27,7 @@ export function DocumentViewer({ document }: DocumentViewerProps) {
             <div className="text-red-500 text-6xl mb-4">PDF</div>
             <h3 className="text-lg font-medium mb-2">{document.name}</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              PDF-Vorschau würde hier angezeigt werden. In einer vollständigen Implementierung würde hier ein PDF-Viewer
-              integriert sein.
+              PDF preview would be displayed here. In a complete implementation, a PDF viewer would be integrated here.
             </p>
             <div className="border p-4 rounded-md text-left bg-white">
               <p className="font-mono text-sm">{document.content}</p>
@@ -41,8 +40,8 @@ export function DocumentViewer({ document }: DocumentViewerProps) {
             <div className="text-blue-500 text-6xl mb-4">DOCX</div>
             <h3 className="text-lg font-medium mb-2">{document.name}</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              DOCX-Vorschau würde hier angezeigt werden. In einer vollständigen Implementierung würde hier ein
-              DOCX-Viewer integriert sein.
+              DOCX preview would be displayed here. In a complete implementation, a DOCX viewer would be integrated
+              here.
             </p>
             <div className="border p-4 rounded-md text-left bg-white">
               <p className="font-mono text-sm">{document.content}</p>
@@ -55,11 +54,10 @@ export function DocumentViewer({ document }: DocumentViewerProps) {
             <div className="text-green-500 text-6xl mb-4">IMAGE</div>
             <h3 className="text-lg font-medium mb-2">{document.name}</h3>
             <p className="text-sm text-muted-foreground mb-4">
-              Bildvorschau würde hier angezeigt werden. In einer vollständigen Implementierung würde hier das Bild
-              angezeigt werden.
+              Image preview would be displayed here. In a complete implementation, the image would be displayed here.
             </p>
             <div className="border p-4 rounded-md text-left bg-white">
-              <p className="font-mono text-sm">Bilddaten...</p>
+              <p className="font-mono text-sm">Image data...</p>
             </div>
           </div>
         )}

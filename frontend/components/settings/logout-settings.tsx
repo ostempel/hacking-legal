@@ -20,17 +20,17 @@ export function LogoutSettings() {
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle>Abmelden</CardTitle>
-          <CardDescription>Melden Sie sich ab und kehren Sie zur Startseite zurück</CardDescription>
+          <CardTitle>Logout</CardTitle>
+          <CardDescription>Log out and return to the start page</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <p className="text-muted-foreground">
-              Wenn Sie sich abmelden, werden Sie zur Startseite weitergeleitet und müssen Ihren Modus erneut auswählen.
+              When you log out, you will be redirected to the start page and will need to select your mode again.
             </p>
             <Button onClick={handleLogout} className="w-full sm:w-auto">
               <LogOut className="mr-2 h-4 w-4" />
-              Abmelden
+              Logout
             </Button>
           </div>
         </CardContent>
