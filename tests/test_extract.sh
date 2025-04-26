@@ -6,7 +6,7 @@ echo "Testing /extract endpoint..."
 curl -X POST http://localhost:8000/extract \
   -H "Content-Type: application/json" \
   -d '{
-    "text": "This Employment Agreement between Alice Johnson and FutureTech Inc. is effective as of March 1, 2023, under the jurisdiction of the United States of America."
+    "text": "**1. Who is the defendant and plaintiff?** The defendant (appellant) is Jake Holmes, and the plaintiff (appellee) is Michael Zangari, representing the State of Arkansas."
   }' | jq '.'
 
 echo "Test completed." 

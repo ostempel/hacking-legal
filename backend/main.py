@@ -2,12 +2,17 @@ from fastapi import FastAPI, HTTPException, UploadFile, File, Query
 from pydantic import BaseModel, Field
 import spacy
 from typing import List, Dict, Optional
-from transformers import AutoTokenizer, AutoModel
+from transformers import AutoTokenizer, AutoModel, pipeline
 import torch
 from sklearn.metrics.pairwise import cosine_similarity
 import PyPDF2
 import io
 import random  # temporary for demo purposes
+import requests
+import json
+import pymupdf  
+import pymupdf4llm
+
 
 # Load English language model
 nlp = spacy.load("en_core_web_sm")
@@ -36,6 +41,14 @@ class ExtractionResponse(BaseModel):
 class LegalBertResponse(BaseModel):
     embeddings: List[List[float]]
     tokens: List[str]
+
+class LLMRequest(BaseModel):
+    model: str
+    prompt: str
+    stream: bool
+
+class LLMResponse(BaseModel):
+    response: str
 
 @app.post("/extract")
 async def extract_information(text_input: TextInput):
@@ -73,45 +86,104 @@ async def extract_information(text_input: TextInput):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/extract2")
-async def extract_legal_bert(text_input: TextInput):
+@app.post("/extract_pdf_llm")
+async def extract_from_pdf_llm(
+    file: UploadFile = File(...),
+    model: str = Query("llama3.2", description="The LLM model to use"),
+    prompt_template: str = Query(
+        "{text}\n\n"
+        "Answer the following questions shortly:\n"
+        "1. Who is the appellant and appellee? Give me their names and the names and their lawyers.\n"
+        "2. Has this law suite any relevance to BMW?\n"
+        "3. Is this a high risk for the company BMW?\n"
+        "4. What is the complaint and legal action?\n"
+        "5. Summarize the case in a few sentences containing all the relevant information?\n\n",
+        description="Template for the prompt, use {text} where the document content should be inserted"
+    )
+):
     try:
-        # Tokenize and get embeddings from Legal-BERT
-        inputs = legal_bert_tokenizer(text_input.text, return_tensors="pt", padding=True, truncation=True, max_length=512)
-        
-        with torch.no_grad():
-            outputs = legal_bert_model(**inputs)
-            
-        # Get the embeddings from the last hidden state
-        embeddings = outputs.last_hidden_state.squeeze(0).tolist()
-        
-        # Get the tokens
-        tokens = legal_bert_tokenizer.convert_ids_to_tokens(inputs["input_ids"][0])
-        
-        return LegalBertResponse(
-            embeddings=embeddings,
-            tokens=tokens
-        )
-    
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@app.post("/extract_pdf")
-async def extract_from_pdf(file: UploadFile = File(...)):
-    try:
+        # Extract text from PDF
         contents = await file.read()
         pdf_file = io.BytesIO(contents)
+
+        # Jetzt die Bytes direkt in PyMuPDF öffnen
+        doc = pymupdf.open(stream=pdf_file, filetype="pdf")
+        md_text = pymupdf4llm.to_markdown(doc)
+        print(f"MD text: {md_text}")
         
-        reader = PyPDF2.PdfReader(pdf_file)
-        text = ""
-        for page in reader.pages:
-            text += page.extract_text() + "\n"
+        prompt = prompt_template.format(text=md_text)
+        llm_request_header = {
+            "model": "llama3.2", 
+            "prompt": f"{md_text}\n\nWho is the appellant and appellee with full names in this lawsuit? Answer in a json format with the keys 'appellant' and 'appellee'.",
+            "stream": False
+        }
+        response = requests.post(
+            "http://localhost:11434/api/generate",
+            json=llm_request_header
+        )
+        if response.status_code != 200:
+            raise HTTPException(
+                status_code=response.status_code,
+                detail="Failed to get response from LLM service"
+            )
+        llm_response_header = response.json()
+        print(f"LLM response header: {llm_response_header.get('response', '')}")
+
+        llm_request = {
+            "model": model,
+            "prompt": prompt,
+            "stream": False
+        }
         
-        text_input = TextInput(text=text)
-        return await extract_information(text_input)
+        # Send request to local LLM service
+        response = requests.post(
+            "http://localhost:11434/api/generate",
+            json=llm_request
+        )
+        
+        if response.status_code != 200:
+            raise HTTPException(
+                status_code=response.status_code,
+                detail="Failed to get response from LLM service"
+            )
+        
+        print("successfully got response")
+        llm_response = response.json()
+        print(f"LLM response: {llm_response.get('response', '')}")
+
+
+        # Extract appellant and appellee information
+        appellant_and_appellee = extract_appellant_and_appellee(md_text)
+        print(f"Appellant and appellee: {appellant_and_appellee}")
+
+        return LLMResponse(response=llm_response.get("response", ""))
         
     except Exception as e:
+        print(e)
         raise HTTPException(status_code=400, detail=str(e))
+
+def extract_appellant_and_appellee(text: str) -> str:
+    # Send request to local LLM service
+    llm_request = {
+        "model": "llama3.2", 
+        "prompt": f"{text}\n\nWho is the appellant and appellee in this text? Answer in a json format with the keys 'appellant' and 'appellee'.",
+        "stream": False
+    }
+    
+    response = requests.post(
+        "http://localhost:11434/api/generate",
+        json=llm_request
+    )
+    
+    if response.status_code != 200:
+        raise HTTPException(
+            status_code=response.status_code,
+            detail="Failed to get response from LLM service"
+        )
+        
+    llm_response = response.json()
+    return llm_response.get("response", "")
+
 
 if __name__ == "__main__":
     import uvicorn
