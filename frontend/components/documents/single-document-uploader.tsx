@@ -8,14 +8,6 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Label } from "@/components/ui/label";
-import {
   Upload,
   X,
   CheckCircle2,
@@ -34,7 +26,7 @@ const cases = [
   { id: "C-2024-002", name: "Supplier Contract Analysis" },
 ];
 
-export function DocumentUploader() {
+export function SingleDocumentUploader() {
   const [files, setFiles] = useState<File[]>([]);
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<Record<string, number>>(
@@ -43,75 +35,53 @@ export function DocumentUploader() {
   const [uploadStatus, setUploadStatus] = useState<
     Record<string, "pending" | "success" | "error">
   >({});
-  const [selectedCase, setSelectedCase] = useState<string | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      const newFiles = Array.from(e.target.files);
-      setFiles((prev) => [...prev, ...newFiles]);
+      // Only take the first file since this is a single file uploader
+      const file = e.target.files[0];
+      setFiles([file]);
 
-      // Initialize progress and status for new files
-      const newProgress: Record<string, number> = {};
-      const newStatus: Record<string, "pending" | "success" | "error"> = {};
-
-      newFiles.forEach((file) => {
-        newProgress[file.name] = 0;
-        newStatus[file.name] = "pending";
-      });
-
-      setUploadProgress((prev) => ({ ...prev, ...newProgress }));
-      setUploadStatus((prev) => ({ ...prev, ...newStatus }));
+      // Initialize progress and status for the file
+      setUploadProgress({ [file.name]: 0 });
+      setUploadStatus({ [file.name]: "pending" });
     }
   };
 
   const removeFile = (fileName: string) => {
-    setFiles((prev) => prev.filter((file) => file.name !== fileName));
-
-    // Remove from progress and status
-    setUploadProgress((prev) => {
-      const newProgress = { ...prev };
-      delete newProgress[fileName];
-      return newProgress;
-    });
-
-    setUploadStatus((prev) => {
-      const newStatus = { ...prev };
-      delete newStatus[fileName];
-      return newStatus;
-    });
+    setFiles([]);
+    setUploadProgress({});
+    setUploadStatus({});
   };
 
-  const simulateUpload = () => {
+  const uploadFile = async () => {
     if (files.length === 0) return;
 
     setUploading(true);
+    const file = files[0];
 
-    // Simulate upload progress for each file
-    files.forEach((file) => {
-      let progress = 0;
-      const interval = setInterval(() => {
-        progress += Math.random() * 10;
-        if (progress >= 100) {
-          progress = 100;
-          clearInterval(interval);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("name", file.name);
 
-          // Set status (randomly success or error for demo)
-          const status = Math.random() > 0.2 ? "success" : "error";
-          setUploadStatus((prev) => ({ ...prev, [file.name]: status }));
+      const response = await fetch("/api/cases/upload", {
+        method: "POST",
+        body: formData,
+      });
 
-          // Check if all uploads are complete
-          const allComplete = Object.values(uploadStatus).every(
-            (status) => status === "success" || status === "error"
-          );
+      if (!response.ok) {
+        throw new Error("Upload failed");
+      }
 
-          if (allComplete) {
-            setUploading(false);
-          }
-        }
-
-        setUploadProgress((prev) => ({ ...prev, [file.name]: progress }));
-      }, 300);
-    });
+      setUploadStatus({ [file.name]: "success" });
+      setUploadProgress({ [file.name]: 100 });
+    } catch (error) {
+      console.error("Upload error:", error);
+      setUploadStatus({ [file.name]: "error" });
+    } finally {
+      setUploading(false);
+    }
   };
 
   const getFileIcon = (fileName: string) => {
@@ -120,50 +90,23 @@ export function DocumentUploader() {
     switch (extension) {
       case "pdf":
         return <FilePdf className="h-5 w-5 text-red-500" />;
-      case "doc":
-      case "docx":
-        return <FileText className="h-5 w-5 text-blue-500" />;
-      case "jpg":
-      case "jpeg":
-      case "png":
-        return <FileImage className="h-5 w-5 text-green-500" />;
-      default:
-        return <FileText className="h-5 w-5 text-gray-500" />;
     }
   };
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Upload Documents</CardTitle>
+        <CardTitle>Upload Document</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        <div className="space-y-2">
-          <Label htmlFor="case-select">Select Case (optional)</Label>
-          <Select value={selectedCase || ""} onValueChange={setSelectedCase}>
-            <SelectTrigger id="case-select">
-              <SelectValue placeholder="Select a case" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="none">No case assignment</SelectItem>
-              {cases.map((caseItem) => (
-                <SelectItem key={caseItem.id} value={caseItem.id}>
-                  {caseItem.id}: {caseItem.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
         <div className="border-2 border-dashed rounded-lg p-10 text-center">
           <input
             type="file"
             id="file-upload"
-            multiple
             className="hidden"
             onChange={handleFileChange}
             disabled={uploading}
-            accept=".pdf,.docx,.txt,.png,.jpg,.jpeg"
+            accept=".pdf"
           />
           <label
             htmlFor="file-upload"
@@ -171,13 +114,13 @@ export function DocumentUploader() {
           >
             <Upload className="h-10 w-10 text-muted-foreground mb-4" />
             <h3 className="text-lg font-medium mb-2">
-              Drop files here or click to select
+              Drop file here or click to select
             </h3>
             <p className="text-sm text-muted-foreground mb-4">
-              Supported formats: PDF, DOCX, TXT, PNG, JPG
+              Supported format: PDF
             </p>
             <Button variant="outline" disabled={uploading}>
-              Select Files
+              Select File
             </Button>
           </label>
         </div>
@@ -185,14 +128,14 @@ export function DocumentUploader() {
         {files.length > 0 && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="font-medium">Selected Files ({files.length})</h3>
+              <h3 className="font-medium">Selected File</h3>
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => simulateUpload()}
+                onClick={uploadFile}
                 disabled={uploading || files.length === 0}
               >
-                {uploading ? "Uploading..." : "Start Upload"}
+                {uploading ? "Uploading..." : "Upload File"}
               </Button>
             </div>
 
@@ -245,11 +188,7 @@ export function DocumentUploader() {
                       variant="ghost"
                       size="icon"
                       onClick={() => removeFile(file.name)}
-                      disabled={
-                        uploading &&
-                        uploadProgress[file.name] > 0 &&
-                        uploadProgress[file.name] < 100
-                      }
+                      disabled={uploading}
                     >
                       <X className="h-4 w-4" />
                       <span className="sr-only">Remove</span>

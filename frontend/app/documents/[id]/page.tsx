@@ -1,198 +1,210 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { DocumentViewer } from "@/components/documents/document-viewer"
-import { DocumentAnalysis } from "@/components/documents/document-analysis"
-import { DocumentMetadata } from "@/components/documents/document-metadata"
-import { ArrowLeft, Download, Share2, FileText, FileIcon as FilePdf, FileImage } from "lucide-react"
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
-// Mock document data
-const mockDocuments = [
-  {
-    id: "doc-001",
-    name: "Patent_Application_TechCorp.pdf",
-    type: "pdf",
-    size: "2.4 MB",
-    uploadedBy: "Dr. Schmidt",
-    uploadedAt: "2023-11-28",
-    caseId: "C-2023-002",
-    caseName: "Patent Dispute TechCorp",
-    analyzed: true,
-    content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
-    analysis: {
-      summary: "This document contains a patent application for a new technology in the field of data processing.",
-      keyPoints: [
-        "Application date: 15.10.2023",
-        "Applicant: TechCorp Inc.",
-        "Patent class: G06F 16/00",
-        "Inventors: Dr. John Smith, Jane Doe",
-      ],
-      relevantSections: [
-        { title: "Claim 1", content: "A method for data processing, comprising..." },
-        { title: "Technical Background", content: "The present invention relates to..." },
-      ],
-      recommendations: [
-        "Use as main evidence for the patent dispute",
-        "Add technical experts to evaluate the claims",
-        "Compare with existing patents",
-      ],
-    },
-  },
-  // More documents would be here...
-]
+interface LegalCase {
+  id: string;
+  name: string;
+  uploadId: string;
+  CaseInfo?: {
+    appellant: string;
+    apellee: string;
+    relevant_to_bmw: boolean;
+    subject_of_case: string;
+    high_risk: boolean;
+    complaint_and_legal_action: string;
+    department: string;
+    summary: string;
+  };
+}
 
-export default function DocumentDetailPage({ params }: { params: { id: string } }) {
-  const [isAnalyzing, setIsAnalyzing] = useState(false)
+export default function DocumentPage() {
+  const params = useParams();
+  const [legalCase, setLegalCase] = useState<LegalCase | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [analyzing, setAnalyzing] = useState(false);
 
-  // Find the document by ID
-  const document = mockDocuments.find((doc) => doc.id === params.id)
+  useEffect(() => {
+    const fetchCase = async () => {
+      try {
+        const response = await fetch(`/api/cases/${params.id}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch case");
+        }
+        const data = await response.json();
+        setLegalCase(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "An error occurred");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  if (!document) {
+    fetchCase();
+  }, [params.id]);
+
+  const handleAnalyze = async () => {
+    if (!legalCase) return;
+
+    setAnalyzing(true);
+    try {
+      const response = await fetch(`/api/cases/${legalCase.id}/analyze`, {
+        method: "POST",
+      });
+
+      if (!response.ok) {
+        throw new Error("Analysis failed");
+      }
+
+      const data = await response.json();
+      setLegalCase((prev) => (prev ? { ...prev, CaseInfo: data } : null));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Analysis failed");
+    } finally {
+      setAnalyzing(false);
+    }
+  };
+
+  if (loading) {
     return (
       <div className="container mx-auto p-6">
-        <h1 className="text-3xl font-bold">Document not found</h1>
-        <p className="text-muted-foreground">The requested document does not exist.</p>
-        <Button asChild className="mt-4">
-          <Link href="/documents">Back to document list</Link>
-        </Button>
+        <div className="animate-pulse">
+          <div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/2 mb-6"></div>
+          <div className="space-y-4">
+            <div className="h-32 bg-gray-200 rounded"></div>
+            <div className="h-32 bg-gray-200 rounded"></div>
+          </div>
+        </div>
       </div>
-    )
+    );
   }
 
-  const getDocumentIcon = (type: string) => {
-    switch (type) {
-      case "pdf":
-        return <FilePdf className="h-6 w-6 text-red-500" />
-      case "docx":
-      case "txt":
-        return <FileText className="h-6 w-6 text-blue-500" />
-      case "jpg":
-      case "jpeg":
-      case "png":
-        return <FileImage className="h-6 w-6 text-green-500" />
-      default:
-        return <FileText className="h-6 w-6 text-gray-500" />
-    }
+  if (error) {
+    return (
+      <div className="container mx-auto p-6">
+        <Card className="bg-red-50">
+          <CardContent className="pt-6">
+            <div className="text-red-600">Error: {error}</div>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
-  const handleAnalyze = () => {
-    setIsAnalyzing(true)
-    // Simulate analysis process
-    setTimeout(() => {
-      setIsAnalyzing(false)
-    }, 3000)
+  if (!legalCase) {
+    return (
+      <div className="container mx-auto p-6">
+        <Card className="bg-yellow-50">
+          <CardContent className="pt-6">
+            <div className="text-yellow-600">No case found</div>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   return (
     <div className="container mx-auto p-6 space-y-6">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="icon" asChild>
-            <Link href="/documents">
-              <ArrowLeft className="h-4 w-4" />
-            </Link>
-          </Button>
-          <div className="flex items-center gap-3">
-            {getDocumentIcon(document.type)}
+      <div>
+        <h1 className="text-3xl font-bold">{legalCase.name}</h1>
+        <p className="text-muted-foreground">Case ID: {legalCase.id}</p>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Document Information</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <label className="text-sm font-medium">Upload ID</label>
+            <p className="text-muted-foreground">{legalCase.uploadId}</p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {legalCase.CaseInfo && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Case Analysis</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
             <div>
-              <h1 className="text-2xl font-bold">{document.name}</h1>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <span>{document.size}</span>
-                <span>•</span>
-                <span>Uploaded on {new Date(document.uploadedAt).toLocaleDateString("en-US")}</span>
-                <span>•</span>
-                <span>By {document.uploadedBy}</span>
+              <label className="text-sm font-medium">Parties</label>
+              <p>Appellant: {legalCase.CaseInfo.appellant}</p>
+              <p>Appellee: {legalCase.CaseInfo.apellee}</p>
+            </div>
+            <div>
+              <label className="text-sm font-medium">Subject</label>
+              <p>{legalCase.CaseInfo.subject_of_case}</p>
+            </div>
+            <div>
+              <label className="text-sm font-medium">Department</label>
+              <p>{legalCase.CaseInfo.department}</p>
+            </div>
+            <div>
+              <label className="text-sm font-medium">Risk Assessment</label>
+              <div className="flex gap-2 mt-1">
+                <Badge
+                  variant={
+                    legalCase.CaseInfo.high_risk ? "destructive" : "outline"
+                  }
+                >
+                  {legalCase.CaseInfo.high_risk ? "High Risk" : "Low Risk"}
+                </Badge>
+                <Badge
+                  variant={
+                    legalCase.CaseInfo.relevant_to_bmw ? "default" : "outline"
+                  }
+                >
+                  {legalCase.CaseInfo.relevant_to_bmw
+                    ? "Relevant to BMW"
+                    : "Not Relevant"}
+                </Badge>
               </div>
             </div>
-          </div>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline">
-            <Download className="mr-2 h-4 w-4" />
-            Download
-          </Button>
-          <Button variant="outline">
-            <Share2 className="mr-2 h-4 w-4" />
-            Share
-          </Button>
-          {!document.analyzed && (
-            <Button onClick={handleAnalyze} disabled={isAnalyzing}>
-              {isAnalyzing ? "Analyzing..." : "Analyze"}
+            <div>
+              <label className="text-sm font-medium">Summary</label>
+              <p className="text-muted-foreground">
+                {legalCase.CaseInfo.summary}
+              </p>
+            </div>
+            <div>
+              <label className="text-sm font-medium">Legal Action</label>
+              <p className="text-muted-foreground">
+                {legalCase.CaseInfo.complaint_and_legal_action}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {!legalCase.CaseInfo && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Case Analysis</CardTitle>
+            <CardDescription>
+              This case has not been analyzed yet.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <Button onClick={handleAnalyze} disabled={analyzing}>
+              {analyzing ? "Analyzing..." : "Start Analysis"}
             </Button>
-          )}
-        </div>
-      </div>
-
-      <div className="flex items-center gap-4">
-        {document.caseId ? (
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Case:</span>
-            <Badge variant="outline">
-              <Link href={`/cases/${document.caseId}`} className="hover:underline">
-                {document.caseName}
-              </Link>
-            </Badge>
-          </div>
-        ) : (
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Case:</span>
-            <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
-              Unassigned
-            </Badge>
-          </div>
-        )}
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">Status:</span>
-          {document.analyzed ? (
-            <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-              Analyzed
-            </Badge>
-          ) : (
-            <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
-              Analysis pending
-            </Badge>
-          )}
-        </div>
-      </div>
-
-      <Tabs defaultValue="preview" className="w-full">
-        <TabsList>
-          <TabsTrigger value="preview">Preview</TabsTrigger>
-          <TabsTrigger value="analysis" disabled={!document.analyzed && !isAnalyzing}>
-            AI Analysis
-          </TabsTrigger>
-          <TabsTrigger value="metadata">Metadata</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="preview" className="space-y-6">
-          <DocumentViewer document={document} />
-        </TabsContent>
-
-        <TabsContent value="analysis" className="space-y-6">
-          {isAnalyzing ? (
-            <Card>
-              <CardContent className="flex flex-col items-center justify-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
-                <h3 className="text-lg font-medium">Analyzing document</h3>
-                <p className="text-sm text-muted-foreground mt-2">
-                  The AI is analyzing the document. This may take a moment...
-                </p>
-              </CardContent>
-            </Card>
-          ) : (
-            <DocumentAnalysis document={document} />
-          )}
-        </TabsContent>
-
-        <TabsContent value="metadata" className="space-y-6">
-          <DocumentMetadata document={document} />
-        </TabsContent>
-      </Tabs>
+          </CardContent>
+        </Card>
+      )}
     </div>
-  )
+  );
 }

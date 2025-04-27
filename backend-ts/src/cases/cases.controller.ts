@@ -35,6 +35,7 @@ export class CasesController {
   async findOne(@Param('id') id: string) {
     return this.prisma.legalCase.findUnique({
       where: { id },
+      include: { CaseInfo: true },
     });
   }
 
@@ -47,6 +48,7 @@ export class CasesController {
   ) {
     console.log('data', data);
     if (!file) {
+      console.log('No file found...');
       throw new HttpException('No file uploaded', HttpStatus.BAD_REQUEST);
     }
 
