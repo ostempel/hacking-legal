@@ -11,5 +11,6 @@ V0 (reactnext.js, TailwindCSS) and the Backend on Ollama.
 
 The ”Paragrafenbändiger” is a powerful platform that efficiently integrates both lawyers and other company departments into case processing, simplifies collaboration and at the same time meets the highest standards of security, traceability and legal compliance.
 
-Architecture documentation
+## Architecture documentation
+
 ![Architecture Diagram](https://github.com/ostempel/hacking-legal/raw/main/docs/architecture.drawio.png)
