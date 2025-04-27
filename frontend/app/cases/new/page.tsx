@@ -115,7 +115,7 @@ export default function NewCasePage() {
     }
   };
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="p-6 space-y-6">
       <div>
         <h1 className="text-3xl font-bold">Submit New Case</h1>
         <p className="text-muted-foreground">
@@ -251,7 +251,7 @@ export default function NewCasePage() {
               onClick={uploadFile}
               disabled={uploading || files.length === 0 || !caseTitle.trim()}
             >
-              Submit Case
+              {uploading ? "Uploading..." : "Submit"}
             </Button>
           </div>
         </CardContent>

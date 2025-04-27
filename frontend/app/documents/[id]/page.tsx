@@ -92,7 +92,7 @@ export default function DocumentPage() {
 
   if (loading) {
     return (
-      <div className="container mx-auto p-6">
+      <div className="p-6">
         <div className="animate-pulse">
           <div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>
           <div className="h-4 bg-gray-200 rounded w-1/2 mb-6"></div>
@@ -107,7 +107,7 @@ export default function DocumentPage() {
 
   if (error) {
     return (
-      <div className="container mx-auto p-6">
+      <div className="p-6">
         <Card className="bg-red-50">
           <CardContent className="pt-6">
             <div className="text-red-600">Error: {error}</div>
@@ -119,7 +119,7 @@ export default function DocumentPage() {
 
   if (!legalCase) {
     return (
-      <div className="container mx-auto p-6">
+      <div className="p-6">
         <Card className="bg-yellow-50">
           <CardContent className="pt-6">
             <div className="text-yellow-600">No case found</div>
@@ -130,103 +130,105 @@ export default function DocumentPage() {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
-      <div className="space-y-2">
+    <div className="p-6 space-y-6 w-full">
+      <div className="space-y-2 w-full">
         <h1 className="text-3xl font-bold">{legalCase.title}</h1>
         <div className="flex items-center gap-4">
           <p className="text-muted-foreground">Case ID: {legalCase.id}</p>
         </div>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Document Information</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <label className="text-sm font-medium">Upload ID</label>
-            <p className="text-muted-foreground space-y-10">
-              {legalCase.uploadId}
-            </p>
-            <Badge variant="secondary" className="">
-              <CalendarDays className="h-3 w-3" />
-              {formatDate(legalCase.createdAt)}
-            </Badge>
-          </div>
-        </CardContent>
-      </Card>
-
-      {legalCase.CaseInfo && (
-        <Card>
+      <div className="space-y-6 w-full">
+        <Card className="w-full">
           <CardHeader>
-            <CardTitle>Case Analysis</CardTitle>
+            <CardTitle>Document Information</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">Parties</label>
-              <p>Appellant: {legalCase.CaseInfo.appellant}</p>
-              <p>Appellee: {legalCase.CaseInfo.apellee}</p>
-            </div>
-            <div>
-              <label className="text-sm font-medium">Subject</label>
-              <p>{legalCase.CaseInfo.subject_of_case}</p>
-            </div>
-            <div>
-              <label className="text-sm font-medium">Department</label>
-              <p>{legalCase.CaseInfo.department}</p>
-            </div>
-            <div>
-              <label className="text-sm font-medium">Risk Assessment</label>
-              <div className="flex gap-2 mt-1">
-                <Badge
-                  variant={
-                    legalCase.CaseInfo.high_risk ? "destructive" : "outline"
-                  }
-                >
-                  {legalCase.CaseInfo.high_risk ? "High Risk" : "Low Risk"}
-                </Badge>
-                <Badge
-                  variant={
-                    legalCase.CaseInfo.relevant_to_bmw ? "default" : "outline"
-                  }
-                >
-                  {legalCase.CaseInfo.relevant_to_bmw
-                    ? "Relevant to BMW"
-                    : "Not Relevant"}
-                </Badge>
-              </div>
-            </div>
-            <div>
-              <label className="text-sm font-medium">Summary</label>
-              <p className="text-muted-foreground">
-                {legalCase.CaseInfo.summary}
+            <div className="w-full">
+              <label className="text-sm font-medium">Upload ID</label>
+              <p className="text-muted-foreground space-y-10">
+                {legalCase.uploadId}
               </p>
-            </div>
-            <div>
-              <label className="text-sm font-medium">Legal Action</label>
-              <p className="text-muted-foreground">
-                {legalCase.CaseInfo.complaint_and_legal_action}
-              </p>
+              <Badge variant="secondary" className="mt-2 ">
+                <CalendarDays className="h-3 w-3" />
+                {formatDate(legalCase.createdAt)}
+              </Badge>
             </div>
           </CardContent>
         </Card>
-      )}
 
-      {!legalCase.CaseInfo && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Case Analysis</CardTitle>
-            <CardDescription>
-              This case has not been analyzed yet.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button onClick={handleAnalyze} disabled={analyzing}>
-              {analyzing ? "Analyzing..." : "Start Analysis"}
-            </Button>
-          </CardContent>
-        </Card>
-      )}
+        {legalCase.CaseInfo && (
+          <Card className="w-full">
+            <CardHeader>
+              <CardTitle>Case Analysis</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="w-full">
+                <label className="text-sm font-medium">Parties</label>
+                <p>Appellant: {legalCase.CaseInfo.appellant}</p>
+                <p>Appellee: {legalCase.CaseInfo.apellee}</p>
+              </div>
+              <div className="w-full">
+                <label className="text-sm font-medium">Subject</label>
+                <p>{legalCase.CaseInfo.subject_of_case}</p>
+              </div>
+              <div className="w-full">
+                <label className="text-sm font-medium">Department</label>
+                <p>{legalCase.CaseInfo.department}</p>
+              </div>
+              <div className="w-full">
+                <label className="text-sm font-medium">Risk Assessment</label>
+                <div className="flex gap-2 mt-1">
+                  <Badge
+                    variant={
+                      legalCase.CaseInfo.high_risk ? "destructive" : "outline"
+                    }
+                  >
+                    {legalCase.CaseInfo.high_risk ? "High Risk" : "Low Risk"}
+                  </Badge>
+                  <Badge
+                    variant={
+                      legalCase.CaseInfo.relevant_to_bmw ? "default" : "outline"
+                    }
+                  >
+                    {legalCase.CaseInfo.relevant_to_bmw
+                      ? "Relevant to BMW"
+                      : "Not Relevant"}
+                  </Badge>
+                </div>
+              </div>
+              <div className="w-full">
+                <label className="text-sm font-medium">Summary</label>
+                <p className="text-muted-foreground">
+                  {legalCase.CaseInfo.summary}
+                </p>
+              </div>
+              <div className="w-full">
+                <label className="text-sm font-medium">Legal Action</label>
+                <p className="text-muted-foreground">
+                  {legalCase.CaseInfo.complaint_and_legal_action}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {!legalCase.CaseInfo && (
+          <Card className="w-full">
+            <CardHeader>
+              <CardTitle>Case Analysis</CardTitle>
+              <CardDescription>
+                This case has not been analyzed yet.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button onClick={handleAnalyze} disabled={analyzing}>
+                {analyzing ? "Analyzing..." : "Start Analysis"}
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+      </div>
     </div>
   );
 }
