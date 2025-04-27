@@ -18,13 +18,19 @@ The ”Paragrafenbändiger” is a powerful platform that efficiently integrates
 ## Vision
 
 Technical Improvements:
-    - Authentication & Authorization
-    - move from file-handling to vector-database
-    - add ingestion-pipline which handles pdf upload -> extract text -> chunking -> generate embeddings -> store to vector database
-    - AI-Agent RAG-Pipeline: retrive current case -> search relevant cases -> analyze based on context
-    - provide case chat-bot
+- Authentication & Authorization
+- move from file-handling to vector-database
+- add ingestion-pipline which handles pdf upload -> extract text -> chunking -> generate embeddings -> store to vector database
+- AI-Agent RAG-Pipeline: retrive current case -> search relevant cases -> analyze based on context
+- provide case chat-bot
   
 Organisational Improvements:
-    - adjust UI to lawyer workflows
-    - streamline whole process
-    - discuss with legal departments about gdpr and privacy issues
+- adjust UI to lawyer workflows
+- streamline whole process
+- discuss with legal departments about gdpr and privacy issues
+
+## Demo
+
+👉 [Watch the demo video on YouTube](https://youtu.be/ExLCEYuKdno)
+
+    
