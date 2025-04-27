@@ -75,8 +75,6 @@ export default function NewCasePage() {
 
     try {
       const formData = new FormData();
-      console.log("caseTitle", caseTitle);
-      console.log("file", file);
       formData.append("file", file);
       formData.append("name", file.name);
       formData.append("title", caseTitle);
@@ -92,9 +90,7 @@ export default function NewCasePage() {
 
       setUploadStatus({ [file.name]: "success" });
       setUploadProgress({ [file.name]: 100 });
-      console.log("response", response);
       const body = await response.json();
-      console.log("body", body);
 
       // Redirect to documents page with the ID
       router.push(`/documents/${body.id}`);
