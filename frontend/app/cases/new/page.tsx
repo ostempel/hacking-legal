@@ -78,7 +78,8 @@ export default function NewCasePage() {
       console.log("caseTitle", caseTitle);
       console.log("file", file);
       formData.append("file", file);
-      formData.append("name", caseTitle || file.name);
+      formData.append("name", file.name);
+      formData.append("title", caseTitle);
 
       const response = await fetch("/api/cases/upload", {
         method: "POST",

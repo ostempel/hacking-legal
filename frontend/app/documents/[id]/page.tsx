@@ -11,11 +11,14 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { CalendarDays } from "lucide-react";
 
 interface LegalCase {
   id: string;
+  title: string;
   name: string;
   uploadId: string;
+  createdAt: string;
   CaseInfo?: {
     appellant: string;
     apellee: string;
@@ -76,6 +79,17 @@ export default function DocumentPage() {
     }
   };
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }).format(date);
+  };
+
   if (loading) {
     return (
       <div className="container mx-auto p-6">
@@ -117,9 +131,11 @@ export default function DocumentPage() {
 
   return (
     <div className="container mx-auto p-6 space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold">{legalCase.name}</h1>
-        <p className="text-muted-foreground">Case ID: {legalCase.id}</p>
+      <div className="space-y-2">
+        <h1 className="text-3xl font-bold">{legalCase.title}</h1>
+        <div className="flex items-center gap-4">
+          <p className="text-muted-foreground">Case ID: {legalCase.id}</p>
+        </div>
       </div>
 
       <Card>
@@ -129,7 +145,13 @@ export default function DocumentPage() {
         <CardContent className="space-y-4">
           <div>
             <label className="text-sm font-medium">Upload ID</label>
-            <p className="text-muted-foreground">{legalCase.uploadId}</p>
+            <p className="text-muted-foreground space-y-10">
+              {legalCase.uploadId}
+            </p>
+            <Badge variant="secondary" className="">
+              <CalendarDays className="h-3 w-3" />
+              {formatDate(legalCase.createdAt)}
+            </Badge>
           </div>
         </CardContent>
       </Card>

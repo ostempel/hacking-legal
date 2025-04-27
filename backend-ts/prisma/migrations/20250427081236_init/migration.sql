@@ -1,8 +1,10 @@
 -- CreateTable
 CREATE TABLE "LegalCase" (
     "id" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "uploadId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "LegalCase_pkey" PRIMARY KEY ("id")
 );
@@ -18,6 +20,7 @@ CREATE TABLE "CaseInfo" (
     "complaint_and_legal_action" TEXT NOT NULL,
     "department" TEXT[],
     "summary" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "legalCaseId" TEXT NOT NULL,
 
     CONSTRAINT "CaseInfo_pkey" PRIMARY KEY ("id")
