@@ -26,11 +26,13 @@ export class CasesController {
     private httpService: HttpService,
   ) {}
 
+  // Get all cases
   @Get()
   async findAll() {
     return this.prisma.legalCase.findMany({ include: { CaseInfo: true } });
   }
 
+  // Get a single case
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return this.prisma.legalCase.findUnique({
@@ -39,6 +41,7 @@ export class CasesController {
     });
   }
 
+  // Upload a file
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   @ApiConsumes('multipart/form-data')
@@ -67,6 +70,8 @@ export class CasesController {
           },
         ),
       );
+
+      // Create a new case
       const uploadId = response.data.upload_id;
       const newCase = await this.prisma.legalCase.create({
         data: {
@@ -86,14 +91,17 @@ export class CasesController {
     }
   }
 
+  // Analyze a case
   @Post(':id/analyze')
   async analyzeCase(@Param('id') id: string) {
+    // Get the case
     const legalCase = await this.prisma.legalCase.findUnique({ where: { id } });
 
     if (!legalCase) {
       throw new HttpException('Case not found', HttpStatus.NOT_FOUND);
     }
 
+    // Query the Python backend
     const response = await firstValueFrom(
       this.httpService.post<CaseResponseDTO>(`http://localhost:8000/query`, {
         query: legalCase.name,
@@ -101,6 +109,7 @@ export class CasesController {
       }),
     );
 
+    // Create a new case info
     const caseInfo = await this.prisma.caseInfo.create({
       data: {
         appellant: response.data.appellant,

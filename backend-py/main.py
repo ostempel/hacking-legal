@@ -64,6 +64,9 @@ class QueryRequest(BaseModel):
 
 @app.post("/upload-pdf")
 async def upload_pdf(file: UploadFile = File(...)):
+    """
+    Upload a PDF file to the database.
+    """
     try:
         # Ensure file is PDF
         if not file.filename.endswith('.pdf'):
@@ -103,6 +106,9 @@ async def upload_pdf(file: UploadFile = File(...)):
 
 @app.post("/query")
 async def query(request: QueryRequest):
+    """
+    Query the database for a specific case.
+    """
     prompt = "1. Who is the appellant and appellee by name?.\n2. Has this law suite any relevance to BMW?\n3. Is BMW the subject of this case?\n4. Is this a high risk law suite for the company BMW?\n5. What is the complaint and legal action?\n6. To which department of BMW is this case relevant [Product and Litigation, Corporate Finance, Financial Services and M&A, Intellectual Property, Data and Digital Law, Legal Operations, Antitrust Law Coordination, BMW Group Compliance, Labor and Social Law, Tax Law]?\n7. Summarize the case in a few sentences containing all the relevant information?"
     reader = SimpleDirectoryReader(os.path.join("data", request.uuid), recursive=True)
     docs = reader.load_data()

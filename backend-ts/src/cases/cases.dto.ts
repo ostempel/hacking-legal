@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
+// Create case DTO
 export class CreateCaseDTO {
   @ApiProperty()
   name: string;
@@ -11,6 +12,7 @@ export class CreateCaseDTO {
   file: any;
 }
 
+// Case response DTO
 export class CaseResponseDTO {
   appellant: string;
   appellee: string;
