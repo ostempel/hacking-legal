@@ -1,210 +1,177 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Eye, Download, MoreHorizontal, FileText, FileIcon as FilePdf, FileImage, Trash2, LinkIcon } from "lucide-react"
-import Link from "next/link"
+import { useEffect, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Eye,
+  Download,
+  MoreHorizontal,
+  FileText,
+  FileIcon as FilePdf,
+  FileImage,
+  Trash2,
+  LinkIcon,
+  CalendarDays,
+  ArrowRight,
+} from "lucide-react";
+import Link from "next/link";
 
-// Mock document data
-const mockDocuments = [
-  {
-    id: "doc-001",
-    name: "Patent_Application_TechCorp.pdf",
-    type: "pdf",
-    size: "2.4 MB",
-    uploadedBy: "Dr. Schmidt",
-    uploadedAt: "2023-11-28",
-    caseId: "C-2023-002",
-    caseName: "Patent Dispute TechCorp",
-    analyzed: true,
-  },
-  {
-    id: "doc-002",
-    name: "Technical_Specification.docx",
-    type: "docx",
-    size: "1.8 MB",
-    uploadedBy: "Anna Miller",
-    uploadedAt: "2023-11-29",
-    caseId: "C-2023-002",
-    caseName: "Patent Dispute TechCorp",
-    analyzed: true,
-  },
-  {
-    id: "doc-003",
-    name: "Attorney_Correspondence.txt",
-    type: "txt",
-    size: "156 KB",
-    uploadedBy: "System",
-    uploadedAt: "2023-12-01",
-    caseId: "C-2023-002",
-    caseName: "Patent Dispute TechCorp",
-    analyzed: true,
-  },
-  {
-    id: "doc-004",
-    name: "Product_Photos.jpg",
-    type: "jpg",
-    size: "8.2 MB",
-    uploadedBy: "Thomas Weber",
-    uploadedAt: "2023-12-03",
-    caseId: "C-2023-001",
-    caseName: "Product Liability XYZ Corp",
-    analyzed: true,
-  },
-  {
-    id: "doc-005",
-    name: "Market_Analysis_2023.docx",
-    type: "docx",
-    size: "3.1 MB",
-    uploadedBy: "Anna Miller",
-    uploadedAt: "2023-12-05",
-    caseId: "C-2023-001",
-    caseName: "Product Liability XYZ Corp",
-    analyzed: false,
-  },
-  {
-    id: "doc-006",
-    name: "Competitor_Patents.pdf",
-    type: "pdf",
-    size: "4.7 MB",
-    uploadedBy: "Dr. Schmidt",
-    uploadedAt: "2023-12-10",
-    caseId: "C-2023-002",
-    caseName: "Patent Dispute TechCorp",
-    analyzed: false,
-  },
-  {
-    id: "doc-007",
-    name: "Employee_Survey.docx",
-    type: "docx",
-    size: "1.2 MB",
-    uploadedBy: "Julia Baker",
-    uploadedAt: "2024-01-15",
-    caseId: "C-2023-003",
-    caseName: "Labor Law Compliance",
-    analyzed: true,
-  },
-  {
-    id: "doc-008",
-    name: "Data_Protection_Guidelines.pdf",
-    type: "pdf",
-    size: "3.5 MB",
-    uploadedBy: "Anna Miller",
-    uploadedAt: "2024-01-20",
-    caseId: "C-2024-001",
-    caseName: "Data Protection Audit",
-    analyzed: true,
-  },
-  {
-    id: "doc-009",
-    name: "Supplier_Contract.pdf",
-    type: "pdf",
-    size: "2.8 MB",
-    uploadedBy: "Thomas Weber",
-    uploadedAt: "2024-02-05",
-    caseId: "C-2024-002",
-    caseName: "Supplier Contract Analysis",
-    analyzed: false,
-  },
-  {
-    id: "doc-010",
-    name: "Unassigned_Document.pdf",
-    type: "pdf",
-    size: "1.5 MB",
-    uploadedBy: "System",
-    uploadedAt: "2024-03-01",
-    caseId: null,
-    caseName: null,
-    analyzed: false,
-  },
-]
-
-interface DocumentListProps {
-  sortField: "name" | "case" | "date"
-  sortDirection: "asc" | "desc"
-  selectedCase?: string | null
-  searchQuery?: string
-  filter?: "recent" | "unassigned" | "analyzed"
+interface LegalCase {
+  id: string;
+  title: string;
+  name: string;
+  uploadId: string;
+  createdAt: string;
+  CaseInfo?: {
+    appellant: string;
+    apellee: string;
+    relevant_to_bmw: boolean;
+    subject_of_case: string;
+    high_risk: boolean;
+    complaint_and_legal_action: string;
+    department: string;
+    summary: string;
+  };
 }
 
-export function DocumentList({ sortField, sortDirection, selectedCase, searchQuery = "", filter }: DocumentListProps) {
-  const [documents, setDocuments] = useState(mockDocuments)
+interface DocumentListProps {
+  sortField: "name" | "case" | "date";
+  sortDirection: "asc" | "desc";
+  selectedCase?: string | null;
+  searchQuery?: string;
+  filter?: "all" | "recent" | "unassigned" | "analyzed";
+}
 
-  // Filter documents based on props
-  let filteredDocuments = [...documents]
+export function DocumentList({
+  sortField,
+  sortDirection,
+  selectedCase,
+  searchQuery,
+  filter = "all",
+}: DocumentListProps) {
+  const [cases, setCases] = useState<LegalCase[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Apply case filter
-  if (selectedCase) {
-    filteredDocuments = filteredDocuments.filter((doc) => doc.caseId === selectedCase)
+  useEffect(() => {
+    const fetchCases = async () => {
+      try {
+        const response = await fetch("/api/cases");
+        if (!response.ok) {
+          throw new Error("Failed to fetch cases");
+        }
+        const data = await response.json();
+        setCases(data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to fetch cases");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCases();
+  }, []);
+
+  const formatDate = (dateString: string) => {
+    return new Intl.DateTimeFormat("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    }).format(new Date(dateString));
+  };
+
+  if (loading) {
+    return (
+      <div className="space-y-4">
+        <div className="h-8 bg-gray-100 rounded animate-pulse" />
+        <div className="h-8 bg-gray-100 rounded animate-pulse" />
+        <div className="h-8 bg-gray-100 rounded animate-pulse" />
+      </div>
+    );
   }
 
-  // Apply search filter
-  if (searchQuery) {
-    const query = searchQuery.toLowerCase()
-    filteredDocuments = filteredDocuments.filter(
-      (doc) =>
-        doc.name.toLowerCase().includes(query) ||
-        (doc.caseName && doc.caseName.toLowerCase().includes(query)) ||
-        (doc.uploadedBy && doc.uploadedBy.toLowerCase().includes(query)),
-    )
+  if (error) {
+    return <div className="text-red-500">Error: {error}</div>;
   }
 
-  // Apply tab filters
-  if (filter === "recent") {
-    // Sort by date and take the 5 most recent
-    filteredDocuments = [...filteredDocuments]
-      .sort((a, b) => new Date(b.uploadedAt).getTime() - new Date(a.uploadedAt).getTime())
-      .slice(0, 5)
+  let filteredCases = [...cases];
+
+  // Apply filters
+  if (filter === "analyzed") {
+    filteredCases = filteredCases.filter((c) => c.CaseInfo);
   } else if (filter === "unassigned") {
-    filteredDocuments = filteredDocuments.filter((doc) => !doc.caseId)
-  } else if (filter === "analyzed") {
-    filteredDocuments = filteredDocuments.filter((doc) => doc.analyzed)
+    filteredCases = filteredCases.filter((c) => !c.CaseInfo);
+  } else if (filter === "recent") {
+    filteredCases = filteredCases
+      .sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      )
+      .slice(0, 10);
   }
 
-  // Sort documents
-  filteredDocuments.sort((a, b) => {
-    const direction = sortDirection === "asc" ? 1 : -1
+  // Apply search
+  if (searchQuery) {
+    const query = searchQuery.toLowerCase();
+    filteredCases = filteredCases.filter(
+      (c) =>
+        c.title.toLowerCase().includes(query) ||
+        c.name.toLowerCase().includes(query) ||
+        c.CaseInfo?.subject_of_case.toLowerCase().includes(query)
+    );
+  }
 
+  // Apply sorting
+  filteredCases.sort((a, b) => {
+    let comparison = 0;
     if (sortField === "name") {
-      return direction * a.name.localeCompare(b.name)
-    } else if (sortField === "case") {
-      const caseNameA = a.caseName || ""
-      const caseNameB = b.caseName || ""
-      return direction * caseNameA.localeCompare(caseNameB)
+      comparison = a.title.localeCompare(b.title);
     } else if (sortField === "date") {
-      return direction * (new Date(a.uploadedAt).getTime() - new Date(b.uploadedAt).getTime())
+      comparison =
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
     }
-
-    return 0
-  })
+    return sortDirection === "desc" ? -comparison : comparison;
+  });
 
   const getDocumentIcon = (type: string) => {
     switch (type) {
       case "pdf":
-        return <FilePdf className="h-5 w-5 text-red-500" />
+        return <FilePdf className="h-5 w-5 text-red-500" />;
       case "docx":
       case "txt":
-        return <FileText className="h-5 w-5 text-blue-500" />
+        return <FileText className="h-5 w-5 text-blue-500" />;
       case "jpg":
       case "jpeg":
       case "png":
-        return <FileImage className="h-5 w-5 text-green-500" />
+        return <FileImage className="h-5 w-5 text-green-500" />;
       default:
-        return <FileText className="h-5 w-5 text-gray-500" />
+        return <FileText className="h-5 w-5 text-gray-500" />;
     }
-  }
+  };
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Documents ({filteredDocuments.length})</CardTitle>
+        <CardTitle>Documents ({filteredCases.length})</CardTitle>
       </CardHeader>
       <CardContent>
-        {filteredDocuments.length === 0 ? (
+        {filteredCases.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-muted-foreground">No documents found</p>
           </div>
@@ -212,74 +179,67 @@ export function DocumentList({ sortField, sortDirection, selectedCase, searchQue
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Case</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Size</TableHead>
+                <TableHead>Document</TableHead>
+                <TableHead>Created</TableHead>
                 <TableHead>Status</TableHead>
+                <TableHead>Risk Level</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredDocuments.map((doc) => (
+              {filteredCases.map((doc) => (
                 <TableRow key={doc.id}>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      {getDocumentIcon(doc.type)}
-                      <Link href={`/documents/${doc.id}`} className="hover:underline">
-                        {doc.name}
-                      </Link>
+                      {getDocumentIcon(doc.CaseInfo?.subject_of_case || "")}
+                      <div>
+                        <div className="font-medium">
+                          {doc.title || doc.name}
+                        </div>
+                        <div className="text-sm text-muted-foreground"></div>
+                      </div>
                     </div>
                   </TableCell>
                   <TableCell>
-                    {doc.caseId ? (
-                      <Link href={`/cases/${doc.caseId}`} className="hover:underline">
-                        {doc.caseName}
-                      </Link>
-                    ) : (
-                      <span className="text-muted-foreground">Unassigned</span>
-                    )}
+                    <div className="flex items-center gap-2">
+                      <CalendarDays className="h-4 w-4 text-muted-foreground" />
+                      <span>{formatDate(doc.createdAt)}</span>
+                    </div>
                   </TableCell>
-                  <TableCell>{new Date(doc.uploadedAt).toLocaleDateString("en-US")}</TableCell>
-                  <TableCell>{doc.size}</TableCell>
                   <TableCell>
-                    {doc.analyzed ? (
-                      <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                    {doc.CaseInfo ? (
+                      <Badge
+                        variant="outline"
+                        className="bg-green-50 text-green-700"
+                      >
                         Analyzed
                       </Badge>
                     ) : (
-                      <Badge variant="outline" className="bg-amber-50 text-amber-700 border-amber-200">
+                      <Badge
+                        variant="outline"
+                        className="bg-yellow-50 text-yellow-700"
+                      >
                         Pending
                       </Badge>
                     )}
                   </TableCell>
+                  <TableCell>
+                    {doc.CaseInfo && (
+                      <Badge
+                        variant={
+                          doc.CaseInfo.high_risk ? "destructive" : "outline"
+                        }
+                      >
+                        {doc.CaseInfo.high_risk ? "High Risk" : "Low Risk"}
+                      </Badge>
+                    )}
+                  </TableCell>
                   <TableCell className="text-right">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <MoreHorizontal className="h-4 w-4" />
-                          <span className="sr-only">Actions</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem asChild>
-                          <Link href={`/documents/${doc.id}`}>
-                            <Eye className="mr-2 h-4 w-4" /> View
-                          </Link>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <Download className="mr-2 h-4 w-4" /> Download
-                        </DropdownMenuItem>
-                        {!doc.caseId && (
-                          <DropdownMenuItem>
-                            <LinkIcon className="mr-2 h-4 w-4" /> Assign to Case
-                          </DropdownMenuItem>
-                        )}
-                        <DropdownMenuItem className="text-destructive">
-                          <Trash2 className="mr-2 h-4 w-4" /> Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    <Button variant="ghost" size="icon" asChild>
+                      <Link href={`/documents/${doc.id}`}>
+                        <ArrowRight className="h-4 w-4" />
+                      </Link>
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -288,5 +248,5 @@ export function DocumentList({ sortField, sortDirection, selectedCase, searchQue
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

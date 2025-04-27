@@ -27,8 +27,6 @@ def query_documents(uuid: str, query: str, url: str = "http://localhost:8000"):
         response.raise_for_status()  # Raise an exception for bad status codes
         
         result = response.json()
-        print("\nResponse:")
-        print(json.dumps(result, indent=2))
         
     except requests.exceptions.RequestException as e:
         print(f"\nError occurred: {str(e)}")

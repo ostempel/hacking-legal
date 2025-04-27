@@ -104,7 +104,6 @@ async def upload_pdf(file: UploadFile = File(...)):
 @app.post("/query")
 async def query(request: QueryRequest):
     prompt = "1. Who is the appellant and appellee by name?.\n2. Has this law suite any relevance to BMW?\n3. Is BMW the subject of this case?\n4. Is this a high risk law suite for the company BMW?\n5. What is the complaint and legal action?\n6. To which department of BMW is this case relevant [Product and Litigation, Corporate Finance, Financial Services and M&A, Intellectual Property, Data and Digital Law, Legal Operations, Antitrust Law Coordination, BMW Group Compliance, Labor and Social Law, Tax Law]?\n7. Summarize the case in a few sentences containing all the relevant information?"
-    print(request.uuid)
     reader = SimpleDirectoryReader(os.path.join("data", request.uuid), recursive=True)
     docs = reader.load_data()
     i = VectorStoreIndex.from_documents(docs)
@@ -113,15 +112,14 @@ async def query(request: QueryRequest):
     print("Querying...")
     try:
         res = await qe.aquery(f"Reference the case {request.query} and answer the questions shortly:\n" + prompt)
-        print(res)
-        print(res.response)
 
+        print("Successfully queried")
         response: GenerateResponse = generate(model='llama3.2', stream=False,
             prompt=f"{res.response}\n\n" + prompt,
             format=Case.model_json_schema())
-
-        print(response.model_dump(mode="json"))
         
+        print("Successfully generated response")
+
         # Parse the string response into JSON object
         try:
             json_response = json.loads(response.response)

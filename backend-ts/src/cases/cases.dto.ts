@@ -4,6 +4,9 @@ export class CreateCaseDTO {
   @ApiProperty()
   name: string;
 
+  @ApiProperty()
+  title: string;
+
   @ApiProperty({ type: () => String, format: 'binary' })
   file: any;
 }

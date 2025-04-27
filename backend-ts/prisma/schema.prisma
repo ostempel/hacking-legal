@@ -16,10 +16,12 @@ datasource db {
 
 model LegalCase {
   id       String @id @default(uuid())
+  title    String
   name     String
   uploadId String
 
-  CaseInfo CaseInfo?
+  createdAt DateTime  @default(now())
+  CaseInfo  CaseInfo?
 }
 
 model CaseInfo {
@@ -32,6 +34,8 @@ model CaseInfo {
   complaint_and_legal_action String
   department                 String[]
   summary                    String
+
+  createdAt DateTime @default(now())
 
   LegalCase   LegalCase @relation(fields: [legalCaseId], references: [id])
   legalCaseId String    @unique

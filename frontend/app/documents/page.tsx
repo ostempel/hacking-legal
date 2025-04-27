@@ -1,57 +1,59 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useRef } from "react"
-import { DocumentUploader } from "@/components/documents/document-uploader"
-import { DocumentList } from "@/components/documents/document-list"
-import { DocumentFilters } from "@/components/documents/document-filters"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Button } from "@/components/ui/button"
-import { Plus, Upload } from "lucide-react"
+import { useState, useRef } from "react";
+import { DocumentUploader } from "@/components/documents/document-uploader";
+import { DocumentList } from "@/components/documents/document-list";
+import { DocumentFilters } from "@/components/documents/document-filters";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import { Plus, Upload } from "lucide-react";
 
 export default function DocumentsPage() {
-  const [sortField, setSortField] = useState<"name" | "case" | "date">("date")
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc")
-  const [selectedCase, setSelectedCase] = useState<string | null>(null)
-  const [searchQuery, setSearchQuery] = useState("")
-  const fileInputRef = useRef<HTMLInputElement>(null)
+  const [sortField, setSortField] = useState<"name" | "case" | "date">("date");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+  const [selectedCase, setSelectedCase] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSort = (field: "name" | "case" | "date") => {
     if (field === sortField) {
-      setSortDirection(sortDirection === "asc" ? "desc" : "asc")
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     } else {
-      setSortField(field)
-      setSortDirection("asc")
+      setSortField(field);
+      setSortDirection("asc");
     }
-  }
+  };
 
   const handleCaseFilter = (caseId: string | null) => {
-    setSelectedCase(caseId)
-  }
+    setSelectedCase(caseId);
+  };
 
   const handleSearch = (query: string) => {
-    setSearchQuery(query)
-  }
+    setSearchQuery(query);
+  };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files
+    const files = e.target.files;
     if (files && files.length > 0) {
       // Here you would typically handle the file upload
       // For now, just log the file name
-      console.log(`Selected file: ${files[0].name}`)
+      console.log(`Selected file: ${files[0].name}`);
 
       // Reset the input so the same file can be selected again
-      e.target.value = ""
+      e.target.value = "";
     }
-  }
+  };
 
   return (
     <div className="container mx-auto p-6 space-y-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-3xl font-bold">Documents</h1>
-          <p className="text-muted-foreground">Manage and analyze all documents</p>
+          <p className="text-muted-foreground">
+            Manage and analyze all documents
+          </p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
@@ -62,7 +64,13 @@ export default function DocumentsPage() {
             <Plus className="mr-2 h-4 w-4" />
             New Document
           </Button>
-          <input type="file" ref={fileInputRef} accept=".pdf" className="hidden" onChange={handleFileUpload} />
+          <input
+            type="file"
+            ref={fileInputRef}
+            accept=".pdf"
+            className="hidden"
+            onChange={handleFileUpload}
+          />
         </div>
       </div>
 
@@ -84,18 +92,13 @@ export default function DocumentsPage() {
             onSearch={handleSearch}
           />
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-1">
-              <DocumentUploader />
-            </div>
-            <div className="lg:col-span-2">
-              <DocumentList
-                sortField={sortField}
-                sortDirection={sortDirection}
-                selectedCase={selectedCase}
-                searchQuery={searchQuery}
-              />
-            </div>
+          <div className="lg:col-span-2">
+            <DocumentList
+              sortField={sortField}
+              sortDirection={sortDirection}
+              selectedCase={selectedCase}
+              searchQuery={searchQuery}
+            />
           </div>
         </TabsContent>
 
@@ -109,19 +112,14 @@ export default function DocumentsPage() {
             onSearch={handleSearch}
           />
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-1">
-              <DocumentUploader />
-            </div>
-            <div className="lg:col-span-2">
-              <DocumentList
-                sortField={sortField}
-                sortDirection={sortDirection}
-                selectedCase={selectedCase}
-                searchQuery={searchQuery}
-                filter="recent"
-              />
-            </div>
+          <div className="lg:col-span-2">
+            <DocumentList
+              sortField={sortField}
+              sortDirection={sortDirection}
+              selectedCase={selectedCase}
+              searchQuery={searchQuery}
+              filter="recent"
+            />
           </div>
         </TabsContent>
 
@@ -134,18 +132,13 @@ export default function DocumentsPage() {
             disableCaseFilter
           />
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-1">
-              <DocumentUploader />
-            </div>
-            <div className="lg:col-span-2">
-              <DocumentList
-                sortField={sortField}
-                sortDirection={sortDirection}
-                searchQuery={searchQuery}
-                filter="unassigned"
-              />
-            </div>
+          <div className="lg:col-span-2">
+            <DocumentList
+              sortField={sortField}
+              sortDirection={sortDirection}
+              searchQuery={searchQuery}
+              filter="unassigned"
+            />
           </div>
         </TabsContent>
 
@@ -159,22 +152,17 @@ export default function DocumentsPage() {
             onSearch={handleSearch}
           />
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-1">
-              <DocumentUploader />
-            </div>
-            <div className="lg:col-span-2">
-              <DocumentList
-                sortField={sortField}
-                sortDirection={sortDirection}
-                selectedCase={selectedCase}
-                searchQuery={searchQuery}
-                filter="analyzed"
-              />
-            </div>
+          <div className="lg:col-span-2">
+            <DocumentList
+              sortField={sortField}
+              sortDirection={sortDirection}
+              selectedCase={selectedCase}
+              searchQuery={searchQuery}
+              filter="analyzed"
+            />
           </div>
         </TabsContent>
       </Tabs>
     </div>
-  )
+  );
 }
